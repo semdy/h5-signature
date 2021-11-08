@@ -1,4 +1,5 @@
 # h5-signature
+    基于canvas的手写签名
 
 ## Install
 ```bash
@@ -13,9 +14,9 @@
 ```
 
 
-## 基于canvas的手写签名
+## Usage
 
-``` javascript
+``` js
 new Signature.default({
     root: container, // root dom container
     color: '#000', // draw color
@@ -69,4 +70,4 @@ new Signature.default({
     download the origin drawed image
     
 ## Thanks
-    [smooth-signature](https://github.com/linjc/smooth-signature)
+    [smooth-signature](https://github.com/linjc/smooth-signature/)
