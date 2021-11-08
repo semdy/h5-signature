@@ -10,6 +10,14 @@
   "author": "semdy",
   "email": "501859275@qq.com",
   "license": "ISC",
+  "homepage": "https://github.com/semdy/h5-signature",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/semdy/h5-signature.git"
+  },
+  "bugs": {
+    "url": "https://github.com/semdy/h5-signature/issues"
+  },
   "devDependencies": {
     "@babel/core": "7.13.14",
     "@babel/plugin-transform-runtime": "^7.16.0",

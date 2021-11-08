@@ -23,8 +23,7 @@ class Common {
         }
         this.drawElement.width = eWidth
         this.drawElement.height = eHeight
-        this.drawElement.style.cssText = `position:absolute; left: 0; top: 0; width: ${eWidth}px; height: ${eHeight}px;`
-        this.drawElement.style.cssText = `position:absolute; left: 0; top: 0; width: ${eWidth}px; height: ${eHeight}px;`
+        this.drawElement.style.cssText = `position:absolute; left: 0; top: 0; width: ${eWidth}px; height: ${eHeight}px; touch-action: none;`
     }
 
     attachEvents() {

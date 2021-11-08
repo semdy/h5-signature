@@ -1,7 +1,7 @@
 import { noop } from './utils'
 import Common from './common'
 import Painter from './painter'
-import UndoRedoManager from './UndoRedoManager'
+import UndoRedoManager from './undoRedoManager'
 
 class Stage extends Common {
 
@@ -121,8 +121,13 @@ class Stage extends Common {
     }
 
     getResult() {
-        const { width, height } = this.drawElement
-        const imgData = this.drawCtx.getImageData(0, 0, width, height).data
+        let canvas = this.drawElement
+        if (this.options.rotate !== 0) {
+            canvas = this.getRotateCanvas(this.options.rotate)
+        }
+        const ctx = canvas.getContext('2d')
+        const { width, height } = canvas
+        const imgData = ctx.getImageData(0, 0, width, height).data
         let lOffset = width, rOffset = 0, tOffset = height, bOffset = 0
         for (let i = 0; i < width; i++) {
             for (let j = 0; j < height; j++) {
@@ -144,7 +149,7 @@ class Stage extends Common {
         const cutCtx = cutCanvas.getContext('2d')
         cutCanvas.width = rOffset - lOffset
         cutCanvas.height = bOffset - tOffset
-        cutCtx.drawImage(this.drawElement, lOffset, tOffset, cutCanvas.width, cutCanvas.height, 0, 0, cutCanvas.width, cutCanvas.height)
+        cutCtx.drawImage(canvas, lOffset, tOffset, cutCanvas.width, cutCanvas.height, 0, 0, cutCanvas.width, cutCanvas.height)
 
         let exWidth = cutCanvas.width
         let exHeight = cutCanvas.height
@@ -165,6 +170,34 @@ class Stage extends Common {
         exportCtx.drawImage(cutCanvas, exportPadding, exportPadding, exportCanvas.width - exportPadding * 2, exportCanvas.height - exportPadding * 2)
 
         return exportCanvas
+    }
+
+    getRotateCanvas(degree = 90) {
+        if (degree > 0) {
+            degree = degree > 90 ? 180 : 90;
+        } else {
+            degree = degree < -90 ? 180 : -90;
+        }
+        const canvas = document.createElement('canvas')
+        const w = this.drawElement.width
+        const h = this.drawElement.height
+        if (degree === 180) {
+            canvas.width = w
+            canvas.height = h
+        } else {
+            canvas.width = h
+            canvas.height = w
+        }
+        const ctx = canvas.getContext('2d')
+        ctx.rotate(degree * Math.PI / 180)
+        if (degree === 90) { // 顺时针90度
+            ctx.drawImage(this.drawElement, 0, -h, w, h)
+        } else if (degree === -90) { // 逆时针90度
+            ctx.drawImage(this.drawElement, -w, 0, w, h)
+        } else if (degree === 180) {
+            ctx.drawImage(this.drawElement, -w, -h, w, h)
+        }
+        return canvas
     }
 
     base64ToBlob(code) {
@@ -203,8 +236,13 @@ Stage.defaultOptions = {
     root: null,
     width: 'auto',
     height: 'auto',
-    color: '#333',
+    openSmooth: true,
+    color: '#000',
     lineWidth: 8,
+    rotate: 0,
+    minWidth: 2,
+    minSpeed: 1.5,
+    maxWidthDiffRate: 20,
     exportPadding: 0,
     exportMaxWidth: null,
     exportMaxHeight: null,

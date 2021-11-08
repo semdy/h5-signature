@@ -10,7 +10,9 @@
     <script src="./index.js"></script>
     <style>
         #container {
-            background-color: #f9f9f9;
+            background-color: #f0f0f0;
+            cursor: crosshair;
+            border: 2px dashed #ccc;
         }
         [disabled] {
             opacity: .5;
@@ -21,11 +23,11 @@
 
 <body>
 <div class="cover">
-    <div id="container" style="width: 500px; height: 500px;"></div>
-    <div>
-        <button id="clear">清空</button>
-        <button id="undo">撤销</button>
-        <button id="redo">重做</button>
+    <div id="container" style="width: 1000px; height: 600px;"></div>
+    <div style="margin: 10px 0;">
+        <button id="clear">clear</button>
+        <button id="undo">undo</button>
+        <button id="redo">redo</button>
         <select id="setLineWidth">
             <option value="2">2</option>
             <option value="5">5</option>
@@ -38,8 +40,8 @@
             <option value="#ff0000">#ff0000</option>
             <option value="#f90">#f90</option>
         </select>
-        <button id="exportBtn">结果</button>
-        <button id="downloadBtn">下载</button>
+        <button id="exportBtn">view result</button>
+        <button id="downloadBtn">download</button>
     </div>
     <img id="preview" src="" alt="" />
 </div>
