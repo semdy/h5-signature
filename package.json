@@ -1,0 +1,26 @@
+{
+  "name": "h5-signature",
+  "version": "0.1.0",
+  "description": "h5 signature",
+  "main": "lib/index.js",
+  "scripts": {
+    "start": "webpack serve --mode=development",
+    "build": "webpack"
+  },
+  "author": "semdy",
+  "email": "501859275@qq.com",
+  "license": "ISC",
+  "devDependencies": {
+    "@babel/core": "7.13.14",
+    "@babel/plugin-transform-runtime": "^7.16.0",
+    "@babel/preset-env": "7.13.12",
+    "babel-loader": "8.2.2",
+    "html-webpack-plugin": "^5.5.0",
+    "webpack": "5.30.0",
+    "webpack-cli": "^4.9.1",
+    "webpack-dev-server": "^4.4.0"
+  },
+  "dependencies": {
+    "@babel/runtime": "^7.16.0"
+  }
+}
