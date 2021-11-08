@@ -64,8 +64,6 @@ class Stage extends Common {
 
     clear() {
         this.drawStack = []
-        this.lastCanUndo = false
-        this.lastCanRedo = false
         this.undoRedoManager.clear()
         this.handleUndoRedoStateChange()
     }
