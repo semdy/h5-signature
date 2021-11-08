@@ -57,7 +57,7 @@ module.exports  = {
     plugins: [
         isDev &&
         new HtmlWebpackPlugin({
-            template:'./demo.html'
+            template:'./index.html'
         })
     ].filter(Boolean)
 }

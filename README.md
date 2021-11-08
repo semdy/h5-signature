@@ -1,5 +1,5 @@
 # h5-signature
-    基于canvas的手写签名
+   基于canvas的手写签名
 
 ## Install
 ```bash
@@ -17,6 +17,8 @@
 ## Usage
 
 ``` js
+<div style="width:300px;height:300px" id="container"></div>
+var container = document.getElementById('container')
 new Signature.default({
     root: container, // root dom container
     color: '#000', // draw color
@@ -38,36 +40,36 @@ new Signature.default({
 ## instance methods
 
 #### setLineWidth
-    paramters: width [number]
-    set draw lineWidth dynamic
+    parameters: width [number]
+set draw lineWidth dynamic
     
 #### setColor
-    paramters: color [string]
-    set draw color dynamic
+    parameters: color [string]
+set draw color dynamic
     
 #### clear
-    clear the canvas
+clear the canvas
     
 #### undo
-    go prev draw stage
+go prev draw stage
     
 #### redo
-    go next draw stage
+go next draw stage
     
 #### canUndo
-    query if can undo
+query if can undo
     
 #### canRedo
-    query if can redo
+query if can redo
     
 #### getResult
-    get the croped canvas dom
+get the croped canvas dom
     
 #### destroy
-    destroy the instance
+destroy the instance
     
 #### downloadFile
-    download the origin drawed image
+download the origin drawed image
     
 ## Thanks
-    [smooth-signature](https://github.com/linjc/smooth-signature/)
+[smooth-signature](https://github.com/linjc/smooth-signature)
