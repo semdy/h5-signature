@@ -30,6 +30,12 @@ class Painter extends Common {
     }
 
     destroy() {
+        this._isStart = false
+        this.lastTimestamp = null
+        this.lastMouseX = null
+        this.lastMouseY = null
+        this.prePoint = null
+        this.point = null
         super.destroy()
         this.mouseEvent.detach()
     }
@@ -111,7 +117,7 @@ class Painter extends Common {
             } else {
                 this.drawNoSmoothLine(this.prePoint,this.point)
             }
-            this.prePoint = this.point
+            this.prePoint = { ...this.point }
         }
     }
 
