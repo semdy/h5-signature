@@ -30,7 +30,7 @@ class Painter extends Common {
         this.drawCtx.lineWidth = this.options.lineWidth
         this.drawCtx.beginPath()
         this.drawCtx.moveTo(evt.stageX, evt.stageY)
-        this.drawCtx.lineTo(evt.stageX, evt.stageY)
+        this.drawCtx.lineTo(evt.stageX + 0.1, evt.stageY + 0.1)
         this.drawCtx.stroke()
     }
 
