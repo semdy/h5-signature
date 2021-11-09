@@ -38,6 +38,14 @@ function getEvent(evt) {
     return evt.changedTouches ? evt.changedTouches[0] : evt;
 }
 
+function debounce(func, wait) {
+    let timer = null
+    return () => {
+        if (timer) clearTimeout(timer)
+        timer = setTimeout(func, wait)
+    }
+}
+
 function getBoundingClientRect(el) {
     // BlackBerry 5, iOS 3 (original iPhone) don't have getBoundingRect
     try {
@@ -75,6 +83,7 @@ export {
     isTouch,
     EVENTS,
     noop,
+    debounce,
     getEvent,
     getEventXY
 }

@@ -30,9 +30,10 @@ new Signature.default({
     minWidth: 2,        // minmize linWidth
     minSpeed: 1.5,      // minmize brush move speed
     maxWidthDiffRate: 20, // Smooth transition threshold
+    resizeDebounceTime: 200, // window resize debounce elapse time
     exportPadding: 0, // padding from edge
-    exportMaxWidth: 300,
-    exportMaxHeight: 300,
+    exportMaxWidth: 300, // export max image width
+    exportMaxHeight: 300, // export max image height
     undoRedoStateChange: Function, // state change if undo/redo state changed
     onDrawStart: Function, // called when draw starts, [MouseEvent, point]
     onDrawing: Function,  // called when draw going , [MouseEvent, point]

@@ -1,4 +1,4 @@
-import { EVENTS } from './utils'
+import { EVENTS, debounce } from './utils'
 
 class Common {
 
@@ -27,11 +27,12 @@ class Common {
     }
 
     attachEvents() {
-        window.addEventListener(EVENTS.RESIZE, this.resize, false)
+        this.debounceReisize = debounce(this.resize.bind(this), this.options.resizeDebounceTime)
+        window.addEventListener(EVENTS.RESIZE, this.debounceReisize, false)
     }
 
     detachEvents() {
-       window.removeEventListener(EVENTS.RESIZE, this.resize, false)
+       window.removeEventListener(EVENTS.RESIZE, this.debounceReisize, false)
     }
 
     destroy() {

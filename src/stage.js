@@ -245,6 +245,7 @@ Stage.defaultOptions = {
     minWidth: 2,
     minSpeed: 1.5,
     maxWidthDiffRate: 20,
+    resizeDebounceTime: 200,
     exportPadding: 0,
     exportMaxWidth: null,
     exportMaxHeight: null,
