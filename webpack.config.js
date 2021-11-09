@@ -11,7 +11,7 @@ module.exports  = {
     },
     optimization:{
         usedExports: true,
-        minimize: true,
+        // minimize: !isDev,
         moduleIds: 'named',
         chunkIds: 'named'
     },

@@ -7,11 +7,8 @@ class Painter extends Common {
         super(options)
         this.options = options
         this._isStart = false
-        this.lastTimestamp = null
-        this.lastMouseX = null
-        this.lastMouseY = null
-        this.prePoint = null
-        this.point = null
+        this.prePoint = {}
+        this.point = {}
     }
 
     init() {
@@ -31,9 +28,6 @@ class Painter extends Common {
 
     destroy() {
         this._isStart = false
-        this.lastTimestamp = null
-        this.lastMouseX = null
-        this.lastMouseY = null
         this.prePoint = null
         this.point = null
         super.destroy()
@@ -96,6 +90,7 @@ class Painter extends Common {
         this.prePoint = {
             x: evt.stageX,
             y: evt.stageY,
+            t: Date.now(),
             lineWidth: this.options.lineWidth
         }
         this.drawCtx.lineJoin = 'round'
@@ -106,35 +101,37 @@ class Painter extends Common {
         this.drawCtx.moveTo(evt.stageX, evt.stageY)
         this.drawCtx.lineTo(evt.stageX + 0.1, evt.stageY + 0.1)
         this.drawCtx.stroke()
+        this.options.onDrawStart(evt, this.prePoint)
     }
 
     handleMouseMove(evt) {
         if (this._isStart) {
-            let lineWidth = this._calculateLineWidth(evt)
-            this.point = { x: evt.stageX, y: evt.stageY, lineWidth }
+            this.point = { x: evt.stageX, y: evt.stageY, t: Date.now() }
+            this.point.lineWidth = this._calculateLineWidth()
             if (this.options.openSmooth) {
                 this.drawSmoothLine(this.prePoint, this.point)
             } else {
                 this.drawNoSmoothLine(this.prePoint,this.point)
             }
             this.prePoint = { ...this.point }
+            this.options.onDrawing(evt, this.point)
         }
     }
 
-    handleMouseUp() {
+    handleMouseUp(evt) {
         this._isStart = false
         const img = new Image()
         img.src = this.drawElement.toDataURL()
         img.onload = () => {
-            this.options.onDrawUp(img)
+            this.options.onDrawUp(evt, img)
             this.drawCtx.clearRect(0,0, this.drawElement.width, this.drawElement.height)
             img.onload = null
         }
     }
 
-    handleMouseOut() {
+    handleMouseOut(evt) {
         if (this._isStart) {
-            this.handleMouseUp()
+            this.handleMouseUp(evt)
         }
     }
 
@@ -155,44 +152,28 @@ class Painter extends Common {
         return Math.min(lineWidth, maxWidth)
     }
 
-    _calculateLineWidth(evt) {
+    _calculateLineWidth() {
         if (this.options.openSmooth) {
-            const speed = this._calculateSpeed(evt)
+            const speed = this._calculateSpeed()
             let lineWidth = this.getLineWidth(speed)
-            if (this.prePoint.lineWidth) {
-                const rate = (lineWidth - this.prePoint.lineWidth) / this.prePoint.lineWidth
-                let maxRate = this.options.maxWidthDiffRate / 100
-                maxRate = maxRate > 1 ? 1 : maxRate < 0.01 ? 0.01 : maxRate
-                if (Math.abs(rate) > maxRate) {
-                    const per = rate > 0 ? maxRate : -maxRate
-                    lineWidth = this.prePoint.lineWidth * (1 + per)
-                }
+            const rate = (lineWidth - this.prePoint.lineWidth) / this.prePoint.lineWidth
+            let maxRate = this.options.maxWidthDiffRate / 100
+            maxRate = maxRate > 1 ? 1 : maxRate < 0.01 ? 0.01 : maxRate
+            if (Math.abs(rate) > maxRate) {
+                const per = rate > 0 ? maxRate : -maxRate
+                lineWidth = this.prePoint.lineWidth * (1 + per)
             }
             return lineWidth
         }
         return this.options.lineWidth
     }
 
-    _calculateSpeed(evt) {
-        if (this.lastTimestamp === null) {
-            this.lastTimestamp = Date.now()
-            this.lastMouseX = evt.stageX
-            this.lastMouseY = evt.stageY
-            return 0
-        }
-
-        const now = Date.now()
-        const dt =  now - this.lastTimestamp
-        const dx = Math.abs(evt.stageX - this.lastMouseX)
-        const dy = Math.abs(evt.stageY - this.lastMouseY)
+    _calculateSpeed() {
+        const dt = (this.point.t - this.prePoint.t) || 0.1
+        const dx = this.point.x - this.prePoint.x
+        const dy = this.point.y - this.prePoint.y
         const dd = Math.sqrt(dx * dx, dy * dy)
-        const speed = dd / dt
-
-        this.lastTimestamp = now
-        this.lastMouseX = evt.stageX
-        this.lastMouseY = evt.stageY
-
-        return speed
+        return dd / dt
     }
 }
 

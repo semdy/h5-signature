@@ -33,7 +33,10 @@ new Signature.default({
     exportPadding: 0, // padding from edge
     exportMaxWidth: 300,
     exportMaxHeight: 300,
-    undoRedoStateChange: Function // state change if undo/redo state changed
+    undoRedoStateChange: Function, // state change if undo/redo state changed
+    onDrawStart: Function, // called when draw starts, [MouseEvent, point]
+    onDrawing: Function,  // called when draw going , [MouseEvent, point]
+    onDrawUp: Function    // called when draw up , [MouseEvent, Image]
 })
 ```
 

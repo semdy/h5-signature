@@ -32,7 +32,7 @@ class Stage extends Common {
         this.tick()
     }
 
-    onDrawUp(img) {
+    onDrawUp(evt, img) {
         const undoFn = () => {
             this.drawStack.pop()
         }
@@ -41,9 +41,7 @@ class Stage extends Common {
         }
         this.undoRedoManager.push(undoFn, redoFn)
         redoFn()
-        if (this.options.onDrawUp) {
-            this.options.onDrawUp(img)
-        }
+        this.options.onDrawUp(evt, img)
         this.handleUndoRedoStateChange()
     }
 
@@ -85,11 +83,14 @@ class Stage extends Common {
     handleUndoRedoStateChange(init) {
         const canUndo = this.canUndo()
         const canRedo = this.canRedo()
-        if (init || this.lastCanUndo !== canUndo) {
+        if (init) {
+            this.options.undoRedoStateChange(canUndo, canRedo)
+        }
+        if (this.lastCanUndo !== canUndo) {
             this.options.undoRedoStateChange(canUndo, canRedo)
             this.lastCanUndo = canUndo
         }
-        if (init || this.lastCanRedo !== canRedo) {
+        if (this.lastCanRedo !== canRedo) {
             this.options.undoRedoStateChange(canUndo, canRedo)
             this.lastCanRedo = canRedo
         }
@@ -247,7 +248,10 @@ Stage.defaultOptions = {
     exportPadding: 0,
     exportMaxWidth: null,
     exportMaxHeight: null,
-    undoRedoStateChange: noop
+    undoRedoStateChange: noop,
+    onDrawStart: noop,
+    onDrawing: noop,
+    onDrawUp: noop
 }
 
 export default Stage
