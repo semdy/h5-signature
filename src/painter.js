@@ -7,6 +7,7 @@ class Painter extends Common {
         super(options)
         this.options = options
         this._isStart = false
+        this._isMoving = false
         this.prePoint = {}
         this.point = {}
     }
@@ -28,6 +29,7 @@ class Painter extends Common {
 
     destroy() {
         this._isStart = false
+        this._isMoving = false
         this.prePoint = null
         this.point = null
         super.destroy()
@@ -87,6 +89,7 @@ class Painter extends Common {
 
     handleMouseDown(evt) {
         this._isStart = true
+        this._isMoving = false
         this.prePoint = {
             x: evt.stageX,
             y: evt.stageY,
@@ -95,12 +98,7 @@ class Painter extends Common {
         }
         this.drawCtx.lineJoin = 'round'
         this.drawCtx.lineCap = 'round'
-        this.drawCtx.lineWidth = this.options.lineWidth * 0.8
         this.drawCtx.strokeStyle = this.options.color
-        this.drawCtx.beginPath()
-        this.drawCtx.moveTo(evt.stageX, evt.stageY)
-        this.drawCtx.lineTo(evt.stageX + 0.1, evt.stageY + 0.1)
-        this.drawCtx.stroke()
         this.options.onDrawStart(evt, this.prePoint)
     }
 
@@ -115,11 +113,13 @@ class Painter extends Common {
             }
             this.prePoint = { ...this.point }
             this.options.onDrawing(evt, this.point)
+            this._isMoving = true
         }
     }
 
     handleMouseUp(evt) {
         this._isStart = false
+        this.drawStartPoint(evt)
         const img = new Image()
         img.src = this.drawElement.toDataURL()
         img.onload = () => {
@@ -132,6 +132,16 @@ class Painter extends Common {
     handleMouseOut(evt) {
         if (this._isStart) {
             this.handleMouseUp(evt)
+        }
+    }
+
+    drawStartPoint(evt) {
+        if (!this._isMoving) {
+            this.drawCtx.lineWidth = this.options.lineWidth
+            this.drawCtx.beginPath()
+            this.drawCtx.moveTo(evt.stageX, evt.stageY)
+            this.drawCtx.lineTo(evt.stageX, evt.stageY)
+            this.drawCtx.stroke()
         }
     }
 
