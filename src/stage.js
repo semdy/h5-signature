@@ -176,9 +176,9 @@ class Stage extends Common {
 
     getRotateCanvas(degree = 90) {
         if (degree > 0) {
-            degree = degree > 90 ? 180 : 90;
+            degree = degree > 90 ? 180 : 90
         } else {
-            degree = degree < -90 ? 180 : -90;
+            degree = degree < -90 ? 180 : -90
         }
         const canvas = document.createElement('canvas')
         const w = this.drawElement.width
