@@ -118,7 +118,6 @@ class Painter extends Common {
 
     handleMouseUp(evt) {
         this._isStart = false
-        this.drawStartPoint(evt)
         const img = new Image()
         img.src = this.drawElement.toDataURL()
         img.onload = () => {
