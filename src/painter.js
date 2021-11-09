@@ -7,7 +7,6 @@ class Painter extends Common {
         super(options)
         this.options = options
         this._isStart = false
-        this._isMoving = false
         this.prePoint = {}
         this.point = {}
     }
@@ -27,13 +26,12 @@ class Painter extends Common {
         this.mouseEvent.attach(this.drawElement)
     }
 
-    destroy() {
-        this._isStart = false
-        this._isMoving = false
-        this.prePoint = null
-        this.point = null
-        super.destroy()
-        this.mouseEvent.detach()
+    drawStartPoint(evt) {
+        this.drawCtx.lineWidth = this.options.lineWidth
+        this.drawCtx.beginPath()
+        this.drawCtx.moveTo(evt.stageX, evt.stageY)
+        this.drawCtx.lineTo(evt.stageX, evt.stageY)
+        this.drawCtx.stroke()
     }
 
     drawSmoothLine(prePoint, point) {
@@ -89,16 +87,18 @@ class Painter extends Common {
 
     handleMouseDown(evt) {
         this._isStart = true
-        this._isMoving = false
         this.prePoint = {
             x: evt.stageX,
             y: evt.stageY,
+            lastX: evt.stageX,
+            lastY: evt.stageY,
             t: Date.now(),
             lineWidth: this.options.lineWidth
         }
         this.drawCtx.lineJoin = 'round'
         this.drawCtx.lineCap = 'round'
         this.drawCtx.strokeStyle = this.options.color
+        this.drawStartPoint(evt)
         this.options.onDrawStart(evt, this.prePoint)
     }
 
@@ -113,7 +113,6 @@ class Painter extends Common {
             }
             this.prePoint = { ...this.point }
             this.options.onDrawing(evt, this.point)
-            this._isMoving = true
         }
     }
 
@@ -135,16 +134,6 @@ class Painter extends Common {
         }
     }
 
-    drawStartPoint(evt) {
-        if (!this._isMoving) {
-            this.drawCtx.lineWidth = this.options.lineWidth
-            this.drawCtx.beginPath()
-            this.drawCtx.moveTo(evt.stageX, evt.stageY)
-            this.drawCtx.lineTo(evt.stageX, evt.stageY)
-            this.drawCtx.stroke()
-        }
-    }
-
     setLineWidth(num) {
         this.options.lineWidth = num
     }
@@ -160,6 +149,14 @@ class Painter extends Common {
         const addWidth = (maxWidth - minWidth) * speed / minSpeed
         const lineWidth = Math.max(maxWidth - addWidth, minWidth)
         return Math.min(lineWidth, maxWidth)
+    }
+
+    destroy() {
+        this._isStart = false
+        this.prePoint = null
+        this.point = null
+        super.destroy()
+        this.mouseEvent.detach()
     }
 
     _calculateLineWidth() {
