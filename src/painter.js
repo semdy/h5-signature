@@ -90,9 +90,10 @@ class Painter extends Common {
         this.prePoint = {
             x: evt.stageX,
             y: evt.stageY,
+            t: Date.now(),
             lastX: evt.stageX,
             lastY: evt.stageY,
-            t: Date.now(),
+            color: this.options.color,
             lineWidth: this.options.lineWidth
         }
         this.drawCtx.lineJoin = 'round'
@@ -104,7 +105,7 @@ class Painter extends Common {
 
     handleMouseMove(evt) {
         if (this._isStart) {
-            this.point = { x: evt.stageX, y: evt.stageY, t: Date.now() }
+            this.point = { x: evt.stageX, y: evt.stageY, t: Date.now(), color: this.options.color }
             this.point.lineWidth = this._calculateLineWidth()
             if (this.options.openSmooth) {
                 this.drawSmoothLine(this.prePoint, this.point)
