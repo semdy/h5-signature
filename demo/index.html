@@ -91,6 +91,7 @@
 
     document.getElementById('exportBtn').addEventListener('click', function () {
         const res = stage.getResult()
+        if (!res) return alert('no image data')
         document.getElementById('preview').src = res.toDataURL()
     })
 

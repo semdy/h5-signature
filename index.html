@@ -51,9 +51,9 @@
 
     var stage = new Signature.default({
         root: container,
-        exportPadding: 5,
-        exportMaxWidth: 300,
-        exportMaxHeight: 300,
+        // exportPadding: 5,
+        // exportMaxWidth: 300,
+        // exportMaxHeight: 300,
         undoRedoStateChange: function (canUndo, canRedo) {
             if (canUndo) {
                 document.getElementById('undo').removeAttribute('disabled')
@@ -90,6 +90,7 @@
 
     document.getElementById('exportBtn').addEventListener('click', function () {
         const res = stage.getResult()
+        if (!res) return alert('no image data')
         document.getElementById('preview').src = res.toDataURL()
     })
 

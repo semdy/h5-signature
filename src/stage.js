@@ -147,31 +147,43 @@ class Stage extends Common {
         rOffset++
         tOffset++
         bOffset++
+
+        const cutWidth = rOffset - lOffset
+        const cutHeight = bOffset - tOffset
+
+        if (cutWidth <= 0 || cutHeight <= 0) return
+
         const cutCanvas = document.createElement('canvas')
         const cutCtx = cutCanvas.getContext('2d')
-        cutCanvas.width = rOffset - lOffset
-        cutCanvas.height = bOffset - tOffset
+        cutCanvas.width = cutWidth
+        cutCanvas.height = cutHeight
         cutCtx.drawImage(canvas, lOffset, tOffset, cutCanvas.width, cutCanvas.height, 0, 0, cutCanvas.width, cutCanvas.height)
 
-        let exWidth = cutCanvas.width
-        let exHeight = cutCanvas.height
-
         const { exportMaxWidth, exportMaxHeight, exportPadding } = this.options
-        if (exportMaxWidth && exportMaxWidth < exWidth) {
-            exHeight = exHeight * (exportMaxWidth / exWidth)
-            exWidth = exportMaxWidth
-        }
-        if (exportMaxHeight && exportMaxHeight < exHeight) {
-            exWidth = exWidth * (exportMaxHeight / exHeight)
-            exHeight = exportMaxHeight
-        }
-        const exportCanvas = document.createElement('canvas')
-        const exportCtx = exportCanvas.getContext('2d')
-        exportCanvas.width = exWidth
-        exportCanvas.height = exHeight
-        exportCtx.drawImage(cutCanvas, exportPadding, exportPadding, exportCanvas.width - exportPadding * 2, exportCanvas.height - exportPadding * 2)
 
-        return exportCanvas
+        if (exportMaxWidth || exportMaxHeight || exportPadding !== 0) {
+            let exWidth = cutCanvas.width
+            let exHeight = cutCanvas.height
+
+            if (exportMaxWidth && exportMaxWidth < exWidth) {
+                exHeight = exHeight * (exportMaxWidth / exWidth)
+                exWidth = exportMaxWidth
+            }
+            if (exportMaxHeight && exportMaxHeight < exHeight) {
+                exWidth = exWidth * (exportMaxHeight / exHeight)
+                exHeight = exportMaxHeight
+            }
+
+            const exportCanvas = document.createElement('canvas')
+            const exportCtx = exportCanvas.getContext('2d')
+            exportCanvas.width = exWidth
+            exportCanvas.height = exHeight
+            exportCtx.drawImage(cutCanvas, exportPadding, exportPadding, exportCanvas.width - exportPadding * 2, exportCanvas.height - exportPadding * 2)
+
+            return exportCanvas
+        }
+
+        return cutCanvas
     }
 
     getRotateCanvas(degree = 90) {
