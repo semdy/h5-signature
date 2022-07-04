@@ -26,8 +26,10 @@ module.exports  = {
         filename: '[name].js',
         chunkFilename:'[name].js',
         path: path.resolve(__dirname, './lib'),
-        library: 'Signature',
-        libraryTarget: 'umd',
+        library: {
+            type: 'umd',
+            name: 'Signature'
+        },
         environment: {
             arrowFunction: false,
             const: false,
