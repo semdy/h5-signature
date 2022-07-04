@@ -12,8 +12,8 @@ module.exports  = {
     optimization:{
         usedExports: true,
         // minimize: !isDev,
-        moduleIds: 'named',
-        chunkIds: 'named'
+        // moduleIds: 'named',
+        // chunkIds: 'named'
     },
     resolve:{
         fallback:{
