@@ -9,7 +9,7 @@ class Common {
     }
 
     resize() {
-        const { width, height, root } = this.options
+        const { width, height, root, scaleRatio } = this.options
         let eWidth, eHeight
         if (width === 'auto') {
             eWidth = root.offsetWidth
@@ -21,8 +21,14 @@ class Common {
         } else {
             eHeight = height
         }
-        this.drawElement.width = eWidth
-        this.drawElement.height = eHeight
+        if (scaleRatio > 0) {
+            this.drawElement.width = eWidth * scaleRatio
+            this.drawElement.height = eHeight * scaleRatio
+            this.drawCtx.scale(scaleRatio, scaleRatio)
+        } else {
+            this.drawElement.width = eWidth
+            this.drawElement.height = eHeight
+        }
         this.drawElement.style.cssText = `position:absolute; left: 0; top: 0; width: ${eWidth}px; height: ${eHeight}px; touch-action: none;`
     }
 

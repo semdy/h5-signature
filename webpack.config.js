@@ -3,19 +3,19 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 
 const isDev = process.argv.includes('--mode=development')
 
-module.exports  = {
+module.exports = {
     mode: 'production',
     devtool: false,
     entry: {
         index: './src/index.js'
     },
-    optimization:{
+    optimization: {
         usedExports: true,
         // minimize: !isDev,
         // moduleIds: 'named',
         // chunkIds: 'named'
     },
-    resolve:{
+    resolve: {
         fallback:{
             'crypto': false,
             'stream': false,
@@ -38,11 +38,11 @@ module.exports  = {
             module: false
         }
     },
-    devServer:{
+    devServer: {
         port: 8080
     },
-    module:{
-        rules:[
+    module: {
+        rules: [
             {
                 test: /\.js$/,
                 exclude: /node_modules/,

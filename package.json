@@ -1,8 +1,11 @@
 {
   "name": "h5-signature",
-  "version": "0.1.17",
+  "version": "0.1.18",
   "description": "h5 signature",
   "main": "lib/index.js",
+  "module": "src/index.js",
+  "types": "index.d.ts",
+  "keywords": ["signature", "canvas", "html5", "手写签名"],
   "scripts": {
     "start": "webpack serve --mode=development",
     "build": "webpack"

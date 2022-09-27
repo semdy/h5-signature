@@ -25,10 +25,11 @@ new Signature.default({
     lineWidth: 8, // draw line width
     width: 'auto', // canvas width, auto fill to root width if set to 'auto'
     height: 'auto', // canvas height, auto fill to root height if set to 'auto'
-    openSmooth: true, // if eanble brush thickness effect
+    openSmooth: true, // if enable brush thickness effect
     rotate: 0,         // export rotated image, available values: -90/90/-180/180
-    minWidth: 2,        // minmize linWidth
-    minSpeed: 1.5,      // minmize brush move speed
+    minWidth: 2,        // minimize linWidth
+    minSpeed: 1.5,      // minimize brush move speed
+    scaleRatio: window.devicePixelRatio, // canvas scale ratio
     maxWidthDiffRate: 20, // Smooth transition threshold
     resizeDebounceTime: 200, // window resize debounce elapse time
     exportPadding: 0, // padding from edge

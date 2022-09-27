@@ -53,10 +53,11 @@ class Stage extends Common {
     }
 
     render() {
+        const { scaleRatio } = this.options
         const { width, height } = this.drawElement
         this.drawCtx.clearRect(0,0, width, height)
         this.drawStack.forEach(item => {
-            this.drawCtx.drawImage(item, 0, 0, width, height)
+            this.drawCtx.drawImage(item, 0, 0, width / scaleRatio, height / scaleRatio)
         })
     }
 
@@ -153,13 +154,13 @@ class Stage extends Common {
 
         if (cutWidth <= 0 || cutHeight <= 0) return
 
+        const { exportMaxWidth, exportMaxHeight, exportPadding, scaleRatio } = this.options
+
         const cutCanvas = document.createElement('canvas')
         const cutCtx = cutCanvas.getContext('2d')
-        cutCanvas.width = cutWidth
-        cutCanvas.height = cutHeight
-        cutCtx.drawImage(canvas, lOffset, tOffset, cutCanvas.width, cutCanvas.height, 0, 0, cutCanvas.width, cutCanvas.height)
-
-        const { exportMaxWidth, exportMaxHeight, exportPadding } = this.options
+        cutCanvas.width = cutWidth / scaleRatio
+        cutCanvas.height = cutHeight / scaleRatio
+        cutCtx.drawImage(canvas, lOffset, tOffset, cutWidth, cutHeight, 0, 0, cutCanvas.width, cutCanvas.height)
 
         if (exportMaxWidth || exportMaxHeight || exportPadding !== 0) {
             let exWidth = cutCanvas.width
@@ -256,6 +257,7 @@ Stage.defaultOptions = {
     rotate: 0,
     minWidth: 2,
     minSpeed: 1.5,
+    scaleRatio: window.devicePixelRatio || 1,
     maxWidthDiffRate: 20,
     resizeDebounceTime: 200,
     exportPadding: 0,

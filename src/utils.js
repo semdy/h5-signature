@@ -1,10 +1,11 @@
-var isTouch = 'ontouchstart' in document
-var ua = navigator.userAgent
-var pointerEnabled = window.navigator.msPointerEnabled
-var isIeMobile = pointerEnabled && /IEMobile/i.test(ua)
+let isTouch = 'ontouchstart' in document
+const ua = navigator.userAgent
+const pointerEnabled = window.navigator.msPointerEnabled
+const isIeMobile = pointerEnabled && /IEMobile/i.test(ua)
+
 isTouch = isTouch || isIeMobile || false
 
-var hidden, visibilityChange
+let hidden, visibilityChange
 if (typeof document.hidden !== "undefined") { // Opera 12.10 and Firefox 18 and later support
     hidden = "hidden"
     visibilityChange = "visibilitychange"
@@ -16,7 +17,7 @@ if (typeof document.hidden !== "undefined") { // Opera 12.10 and Firefox 18 and 
     visibilityChange = "webkitvisibilitychange"
 }
 
-var EVENTS = isIeMobile ? {
+export const EVENTS = isIeMobile ? {
     START: 'MSPointerDown',
     MOVE: 'MSPointerMove',
     END: 'MSPointerCancel',
@@ -32,13 +33,13 @@ var EVENTS = isIeMobile ? {
 
 EVENTS.RESIZE = 'onorientationchange' in window ? 'orientationchange' : 'resize'
 
-function noop() {}
+export function noop() {}
 
-function getEvent(evt) {
+export function getEvent(evt) {
     return evt.changedTouches ? evt.changedTouches[0] : evt;
 }
 
-function debounce(func, wait) {
+export function debounce(func, wait) {
     let timer = null
     return () => {
         if (timer) clearTimeout(timer)
@@ -46,7 +47,7 @@ function debounce(func, wait) {
     }
 }
 
-function getBoundingClientRect(el) {
+export function getBoundingClientRect(el) {
     // BlackBerry 5, iOS 3 (original iPhone) don't have getBoundingRect
     try {
         return el.getBoundingClientRect()
@@ -59,7 +60,7 @@ function getBoundingClientRect(el) {
     }
 }
 
-function getEventXY(el, e) {
+export function getEventXY(el, e) {
     if (e.offsetX !== undefined) {
         return {
             x: e.offsetX,
@@ -72,18 +73,11 @@ function getEventXY(el, e) {
             y: e.layerY
         }
     }
-    var box = getBoundingClientRect(el)
+    const box = getBoundingClientRect(el)
     return {
         x: e.clientX - box.left,
         y: e.clientY - box.top
     }
 }
 
-export {
-    isTouch,
-    EVENTS,
-    noop,
-    debounce,
-    getEvent,
-    getEventXY
-}
+export { isTouch }
