@@ -68,13 +68,14 @@ query if can undo
 query if can redo
     
 #### getResult
-get the croped canvas dom
+    parameters: origin [boolean]
+get the cropped or origin canvas dom
     
 #### destroy
 destroy the instance
     
 #### downloadFile
-download the origin drawed image
+download the origin draw image
     
 ## Thanks
 [smooth-signature](https://github.com/linjc/smooth-signature)
