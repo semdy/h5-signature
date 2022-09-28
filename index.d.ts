@@ -26,10 +26,10 @@ interface IOptions {
   exportPadding?: number,
   exportMaxWidth?: number,
   exportMaxHeight?: number,
-  undoRedoStateChange: (canUndo: boolean, canRedo: boolean) => void,
-  onDrawStart: (evt: IMouseEvent, prePoint: IPoint) => void,
-  onDrawing: (evt: IMouseEvent, prePoint: IPoint) => void,
-  onDrawUp: (evt: IMouseEvent, img: HTMLImageElement) => void,
+  undoRedoStateChange?: (canUndo: boolean, canRedo: boolean) => void,
+  onDrawStart?: (evt: IMouseEvent, prePoint: IPoint) => void,
+  onDrawing?: (evt: IMouseEvent, prePoint: IPoint) => void,
+  onDrawUp?: (evt: IMouseEvent, img: HTMLImageElement) => void,
 }
 
 export default class Signature {
