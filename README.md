@@ -32,6 +32,7 @@ new Signature.default({
     scaleRatio: window.devicePixelRatio, // canvas scale ratio
     maxWidthDiffRate: 20, // Smooth transition threshold
     resizeDebounceTime: 200, // window resize debounce elapse time
+    maxHistoryLength: 0, // max history length, no limit if set to 0
     exportPadding: 0, // padding from edge
     exportMaxWidth: 300, // export max image width
     exportMaxHeight: 300, // export max image height

@@ -1,4 +1,4 @@
-import {EVENTS, debounce} from './utils'
+import { EVENTS, debounce } from './utils'
 
 class Common {
 
@@ -29,12 +29,17 @@ class Common {
       this.drawElement.width = eWidth
       this.drawElement.height = eHeight
     }
-    this.drawElement.style.cssText = `position:absolute; left: 0; top: 0; width: ${eWidth}px; height: ${eHeight}px; touch-action: none;`
+    this.drawElement.style.cssText = `width: ${eWidth}px; height: ${eHeight}px; touch-action: none;`
   }
 
   attachEvents() {
+    const { width, height } = this.options
+
     this.debounceReisize = debounce(this.resize.bind(this), this.options.resizeDebounceTime)
-    window.addEventListener(EVENTS.RESIZE, this.debounceReisize, false)
+
+    if (width === 'auto' || height === 'auto') {
+      window.addEventListener(EVENTS.RESIZE, this.debounceReisize, false)
+    }
   }
 
   detachEvents() {

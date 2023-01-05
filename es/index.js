@@ -65,14 +65,84 @@ function _createClass(Constructor, protoProps, staticProps) {
   if (staticProps) _defineProperties(Constructor, staticProps);
   return Constructor;
 }
-;// CONCATENATED MODULE: ./node_modules/@babel/runtime/helpers/esm/assertThisInitialized.js
-function _assertThisInitialized(self) {
-  if (self === void 0) {
-    throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
+;// CONCATENATED MODULE: ./src/utils.js
+var isTouch = 'ontouchstart' in document || navigator.maxTouchPoints;
+var ua = navigator.userAgent;
+var pointerEnabled = window.navigator.msPointerEnabled;
+var isIeMobile = pointerEnabled && /IEMobile/i.test(ua);
+isTouch = isTouch || isIeMobile || false;
+var utils_hidden, visibilityChange;
+
+if (typeof document.hidden !== "undefined") {
+  // Opera 12.10 and Firefox 18 and later support
+  utils_hidden = "hidden";
+  visibilityChange = "visibilitychange";
+} else if (typeof document.msHidden !== "undefined") {
+  utils_hidden = "msHidden";
+  visibilityChange = "msvisibilitychange";
+} else if (typeof document.webkitHidden !== "undefined") {
+  utils_hidden = "webkitHidden";
+  visibilityChange = "webkitvisibilitychange";
+}
+
+var EVENTS = isIeMobile ? {
+  START: 'MSPointerDown',
+  MOVE: 'MSPointerMove',
+  END: 'MSPointerCancel',
+  HIDDEN: utils_hidden,
+  VISIBILITYCHANGE: visibilityChange
+} : {
+  START: isTouch ? 'touchstart' : 'mousedown',
+  MOVE: isTouch ? 'touchmove' : 'mousemove',
+  END: isTouch ? 'touchend' : 'mouseup',
+  HIDDEN: utils_hidden,
+  VISIBILITYCHANGE: visibilityChange
+};
+EVENTS.RESIZE = 'onorientationchange' in window ? 'orientationchange' : 'resize';
+function noop() {}
+function getEvent(evt) {
+  return evt.changedTouches ? evt.changedTouches[0] : evt;
+}
+function debounce(func, wait) {
+  var timer = null;
+  return function () {
+    if (timer) clearTimeout(timer);
+    timer = setTimeout(func, wait);
+  };
+}
+function getBoundingClientRect(el) {
+  // BlackBerry 5, iOS 3 (original iPhone) don't have getBoundingRect
+  try {
+    return el.getBoundingClientRect();
+  } catch (e) {
+    return {
+      left: 0,
+      top: 0
+    };
+  }
+}
+function getEventXY(el, e) {
+  if (e.offsetX !== undefined) {
+    return {
+      x: e.offsetX,
+      y: e.offsetY
+    };
   }
 
-  return self;
+  if (e.layerX !== undefined && e.layerX !== e.offsetX) {
+    return {
+      x: e.layerX,
+      y: e.layerY
+    };
+  }
+
+  var box = getBoundingClientRect(el);
+  return {
+    x: e.clientX - box.left,
+    y: e.clientY - box.top
+  };
 }
+
 ;// CONCATENATED MODULE: ./node_modules/@babel/runtime/helpers/esm/getPrototypeOf.js
 function _getPrototypeOf(o) {
   _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) {
@@ -152,6 +222,14 @@ function _typeof(obj) {
 
   return _typeof(obj);
 }
+;// CONCATENATED MODULE: ./node_modules/@babel/runtime/helpers/esm/assertThisInitialized.js
+function _assertThisInitialized(self) {
+  if (self === void 0) {
+    throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
+  }
+
+  return self;
+}
 ;// CONCATENATED MODULE: ./node_modules/@babel/runtime/helpers/esm/possibleConstructorReturn.js
 
 
@@ -164,85 +242,7 @@ function _possibleConstructorReturn(self, call) {
 
   return _assertThisInitialized(self);
 }
-;// CONCATENATED MODULE: ./src/utils.js
-var isTouch = ('ontouchstart' in document);
-var ua = navigator.userAgent;
-var pointerEnabled = window.navigator.msPointerEnabled;
-var isIeMobile = pointerEnabled && /IEMobile/i.test(ua);
-isTouch = isTouch || isIeMobile || false;
-var utils_hidden, visibilityChange;
-
-if (typeof document.hidden !== "undefined") {
-  // Opera 12.10 and Firefox 18 and later support
-  utils_hidden = "hidden";
-  visibilityChange = "visibilitychange";
-} else if (typeof document.msHidden !== "undefined") {
-  utils_hidden = "msHidden";
-  visibilityChange = "msvisibilitychange";
-} else if (typeof document.webkitHidden !== "undefined") {
-  utils_hidden = "webkitHidden";
-  visibilityChange = "webkitvisibilitychange";
-}
-
-var EVENTS = isIeMobile ? {
-  START: 'MSPointerDown',
-  MOVE: 'MSPointerMove',
-  END: 'MSPointerCancel',
-  HIDDEN: utils_hidden,
-  VISIBILITYCHANGE: visibilityChange
-} : {
-  START: isTouch ? 'touchstart' : 'mousedown',
-  MOVE: isTouch ? 'touchmove' : 'mousemove',
-  END: isTouch ? 'touchend' : 'mouseup',
-  HIDDEN: utils_hidden,
-  VISIBILITYCHANGE: visibilityChange
-};
-EVENTS.RESIZE = 'onorientationchange' in window ? 'orientationchange' : 'resize';
-function noop() {}
-function getEvent(evt) {
-  return evt.changedTouches ? evt.changedTouches[0] : evt;
-}
-function debounce(func, wait) {
-  var timer = null;
-  return function () {
-    if (timer) clearTimeout(timer);
-    timer = setTimeout(func, wait);
-  };
-}
-function getBoundingClientRect(el) {
-  // BlackBerry 5, iOS 3 (original iPhone) don't have getBoundingRect
-  try {
-    return el.getBoundingClientRect();
-  } catch (e) {
-    return {
-      left: 0,
-      top: 0
-    };
-  }
-}
-function getEventXY(el, e) {
-  if (e.offsetX !== undefined) {
-    return {
-      x: e.offsetX,
-      y: e.offsetY
-    };
-  }
-
-  if (e.layerX !== undefined && e.layerX !== e.offsetX) {
-    return {
-      x: e.layerX,
-      y: e.layerY
-    };
-  }
-
-  var box = getBoundingClientRect(el);
-  return {
-    x: e.clientX - box.left,
-    y: e.clientY - box.top
-  };
-}
-
-;// CONCATENATED MODULE: ./src/common.js
+;// CONCATENATED MODULE: ./src/base.js
 
 
 
@@ -290,13 +290,19 @@ var Common = /*#__PURE__*/function () {
         this.drawElement.height = eHeight;
       }
 
-      this.drawElement.style.cssText = "position:absolute; left: 0; top: 0; width: ".concat(eWidth, "px; height: ").concat(eHeight, "px; touch-action: none;");
+      this.drawElement.style.cssText = "width: ".concat(eWidth, "px; height: ").concat(eHeight, "px; touch-action: none;");
     }
   }, {
     key: "attachEvents",
     value: function attachEvents() {
+      var _this$options2 = this.options,
+          width = _this$options2.width,
+          height = _this$options2.height;
       this.debounceReisize = debounce(this.resize.bind(this), this.options.resizeDebounceTime);
-      window.addEventListener(EVENTS.RESIZE, this.debounceReisize, false);
+
+      if (width === 'auto' || height === 'auto') {
+        window.addEventListener(EVENTS.RESIZE, this.debounceReisize, false);
+      }
     }
   }, {
     key: "detachEvents",
@@ -313,7 +319,7 @@ var Common = /*#__PURE__*/function () {
   return Common;
 }();
 
-/* harmony default export */ var common = (Common);
+/* harmony default export */ var base = (Common);
 ;// CONCATENATED MODULE: ./src/mouseEvents.js
 
 
@@ -456,8 +462,8 @@ function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Re
 
 
 
-var Painter = /*#__PURE__*/function (_Common) {
-  _inherits(Painter, _Common);
+var Painter = /*#__PURE__*/function (_Base) {
+  _inherits(Painter, _Base);
 
   var _super = _createSuper(Painter);
 
@@ -554,6 +560,16 @@ var Painter = /*#__PURE__*/function (_Common) {
       this.drawCtx.stroke();
     }
   }, {
+    key: "drawByImage",
+    value: function drawByImage(img) {
+      var scaleRatio = this.options.scaleRatio;
+      var _this$drawElement = this.drawElement,
+          width = _this$drawElement.width,
+          height = _this$drawElement.height;
+      this.clear();
+      this.drawCtx.drawImage(img, 0, 0, width / scaleRatio, height / scaleRatio);
+    }
+  }, {
     key: "handleMouseDown",
     value: function handleMouseDown(evt) {
       this._isStart = true;
@@ -606,8 +622,6 @@ var Painter = /*#__PURE__*/function (_Common) {
       img.onload = function () {
         _this2.options.onDrawUp(evt, img);
 
-        _this2.drawCtx.clearRect(0, 0, _this2.drawElement.width, _this2.drawElement.height);
-
         img.onload = null;
       };
     }
@@ -639,11 +653,17 @@ var Painter = /*#__PURE__*/function (_Common) {
       return Math.min(lineWidth, maxWidth);
     }
   }, {
+    key: "clear",
+    value: function clear() {
+      this.drawCtx.clearRect(0, 0, this.drawElement.width, this.drawElement.height);
+    }
+  }, {
     key: "destroy",
     value: function destroy() {
       this._isStart = false;
       this.prePoint = null;
       this.point = null;
+      this.clear();
 
       _get(_getPrototypeOf(Painter.prototype), "destroy", this).call(this);
 
@@ -682,7 +702,7 @@ var Painter = /*#__PURE__*/function (_Common) {
   }]);
 
   return Painter;
-}(common);
+}(base);
 
 /* harmony default export */ var painter = (Painter);
 ;// CONCATENATED MODULE: ./src/undoRedoManager.js
@@ -690,11 +710,12 @@ var Painter = /*#__PURE__*/function (_Common) {
 
 
 var UndoRedoManager = /*#__PURE__*/function () {
-  function UndoRedoManager() {
+  function UndoRedoManager(maxLength) {
     _classCallCheck(this, UndoRedoManager);
 
     this._undoStack = [];
     this._redoStack = [];
+    this.maxLength = maxLength;
   }
 
   _createClass(UndoRedoManager, [{
@@ -713,6 +734,10 @@ var UndoRedoManager = /*#__PURE__*/function () {
       };
 
       this._undoStack.push(handler);
+
+      if (this.maxLength > 0 && this._undoStack.length > this.maxLength) {
+        this._undoStack = this._undoStack.slice(-this.maxLength);
+      }
     }
   }, {
     key: "undo",
@@ -759,82 +784,55 @@ var UndoRedoManager = /*#__PURE__*/function () {
 
 
 
-
-
-
-
-
 function stage_ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) { symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); } keys.push.apply(keys, symbols); } return keys; }
 
 function stage_objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { stage_ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { stage_ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
-function stage_createSuper(Derived) { var hasNativeReflectConstruct = stage_isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
-
-function stage_isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
 
 
 
 
-
-
-var Stage = /*#__PURE__*/function (_Common) {
-  _inherits(Stage, _Common);
-
-  var _super = stage_createSuper(Stage);
-
+var Stage = /*#__PURE__*/function () {
   function Stage() {
-    var _this;
-
     var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
     _classCallCheck(this, Stage);
 
-    _this = _super.call(this, options);
-    _this.options = stage_objectSpread(stage_objectSpread({}, Stage.defaultOptions), options);
-    _this.drawStack = [];
-    _this.lastCanUndo = false;
-    _this.lastCanRedo = false;
-    _this.painter = new painter(stage_objectSpread(stage_objectSpread({}, _this.options), {}, {
-      onDrawUp: _this.onDrawUp.bind(_assertThisInitialized(_this))
+    this.options = stage_objectSpread(stage_objectSpread({}, Stage.defaultOptions), options);
+    this.drawStack = [];
+    this.lastCanUndo = false;
+    this.lastCanRedo = false;
+    this.painter = new painter(stage_objectSpread(stage_objectSpread({}, this.options), {}, {
+      onDrawUp: this.onDrawUp.bind(this)
     }));
-    _this.undoRedoManager = new undoRedoManager();
-
-    _this.init();
-
-    return _this;
+    this.undoRedoManager = new undoRedoManager(this.options.maxHistoryLength);
+    this.init();
   }
 
   _createClass(Stage, [{
     key: "init",
     value: function init() {
       var root = this.options.root;
-      this.drawElement = document.createElement('canvas');
-      this.drawCtx = this.drawElement.getContext('2d');
 
-      if (root && root instanceof Element) {
-        root.style.position = 'relative';
-        root.appendChild(this.drawElement);
-      } else {
+      if (!root || !(root instanceof Element)) {
         throw new Error('Invalid root element.');
       }
 
-      _get(_getPrototypeOf(Stage.prototype), "init", this).call(this);
-
       this.painter.init();
+      this.drawElement = this.painter.drawElement;
       this.handleUndoRedoStateChange(true);
-      this.tick();
     }
   }, {
     key: "onDrawUp",
     value: function onDrawUp(evt, img) {
-      var _this2 = this;
+      var _this = this;
 
       var undoFn = function undoFn() {
-        _this2.drawStack.pop();
+        _this.drawStack.pop();
       };
 
       var redoFn = function redoFn() {
-        _this2.drawStack.push(img);
+        _this.drawStack.push(img);
       };
 
       this.undoRedoManager.push(undoFn, redoFn);
@@ -843,43 +841,23 @@ var Stage = /*#__PURE__*/function (_Common) {
       this.handleUndoRedoStateChange();
     }
   }, {
-    key: "tick",
-    value: function tick() {
-      var _this3 = this;
+    key: "rerender",
+    value: function rerender() {
+      var lastImg = this.drawStack[this.drawStack.length - 1];
 
-      this.raf = requestAnimationFrame(function () {
-        _this3.render();
-
-        _this3.tick();
-      });
-    }
-  }, {
-    key: "render",
-    value: function render() {
-      var _this4 = this;
-
-      var scaleRatio = this.options.scaleRatio;
-      var _this$drawElement = this.drawElement,
-          width = _this$drawElement.width,
-          height = _this$drawElement.height;
-      this.drawCtx.clearRect(0, 0, width, height);
-      this.drawStack.forEach(function (item) {
-        _this4.drawCtx.drawImage(item, 0, 0, width / scaleRatio, height / scaleRatio);
-      });
+      if (lastImg) {
+        this.painter.drawByImage(lastImg);
+      } else {
+        this.painter.clear();
+      }
     }
   }, {
     key: "clear",
     value: function clear() {
       this.drawStack = [];
       this.undoRedoManager.clear();
+      this.painter.clear();
       this.handleUndoRedoStateChange();
-    }
-  }, {
-    key: "unTick",
-    value: function unTick() {
-      if (this.raf) {
-        cancelAnimationFrame(this.raf);
-      }
     }
   }, {
     key: "setLineWidth",
@@ -915,12 +893,14 @@ var Stage = /*#__PURE__*/function (_Common) {
     key: "undo",
     value: function undo() {
       this.undoRedoManager.undo();
+      this.rerender();
       this.handleUndoRedoStateChange();
     }
   }, {
     key: "redo",
     value: function redo() {
       this.undoRedoManager.redo();
+      this.rerender();
       this.handleUndoRedoStateChange();
     }
   }, {
@@ -936,9 +916,6 @@ var Stage = /*#__PURE__*/function (_Common) {
   }, {
     key: "destroy",
     value: function destroy() {
-      _get(_getPrototypeOf(Stage.prototype), "destroy", this).call(this);
-
-      this.unTick();
       this.clear();
       this.painter.destroy();
       this.undoRedoManager.clear();
@@ -1115,7 +1092,7 @@ var Stage = /*#__PURE__*/function (_Common) {
   }]);
 
   return Stage;
-}(common);
+}();
 
 Stage.defaultOptions = {
   root: null,
@@ -1130,6 +1107,7 @@ Stage.defaultOptions = {
   scaleRatio: window.devicePixelRatio || 1,
   maxWidthDiffRate: 20,
   resizeDebounceTime: 200,
+  maxHistoryLength: 0,
   exportPadding: 0,
   exportMaxWidth: null,
   exportMaxHeight: null,

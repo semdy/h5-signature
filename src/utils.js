@@ -1,4 +1,4 @@
-let isTouch = 'ontouchstart' in document
+let isTouch = ('ontouchstart' in document) || navigator.maxTouchPoints
 const ua = navigator.userAgent
 const pointerEnabled = window.navigator.msPointerEnabled
 const isIeMobile = pointerEnabled && /IEMobile/i.test(ua)

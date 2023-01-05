@@ -1,6 +1,6 @@
 {
   "name": "h5-signature",
-  "version": "0.1.21",
+  "version": "0.2.0",
   "description": "h5 signature",
   "main": "lib/index.js",
   "module": "es/index.js",
@@ -14,7 +14,7 @@
   ],
   "scripts": {
     "start": "webpack serve --mode=development",
-    "build": "npm run build:umd && npm run build:es && npm run build:umd-minify",
+    "build": "npm run build:es && npm run build:umd && npm run build:umd-minify",
     "build:umd": "webpack",
     "build:umd-minify": "cross-env MINIFY=true webpack",
     "build:es": "cross-env BUILD_TARGET=esModule webpack"

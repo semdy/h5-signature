@@ -1,35 +1,36 @@
 interface IPoint {
-  x: number,
+  x: number
   y: number
-  t: number,
-  lastX?: number,
-  lastY?: number,
-  color: string,
+  t: number
+  lastX?: number
+  lastY?: number
+  color: string
   lineWidth?: number
 }
 
-type IMouseEvent = MouseEvent & { stageX: number, stageY: number }
+type IMouseEvent = MouseEvent & { stageX: number; stageY: number }
 
 interface IOptions {
-  root: HTMLElement | null,
-  width?: number | 'auto',
-  height?: number | 'auto',
-  openSmooth?: boolean,
-  color?: string,
-  lineWidth?: number,
-  rotate?: number,
-  minWidth?: number,
-  minSpeed?: number,
-  scaleRatio?: number,
-  maxWidthDiffRate?: number,
-  resizeDebounceTime?: number,
-  exportPadding?: number,
-  exportMaxWidth?: number,
-  exportMaxHeight?: number,
-  undoRedoStateChange?: (canUndo: boolean, canRedo: boolean) => void,
-  onDrawStart?: (evt: IMouseEvent, prePoint: IPoint) => void,
-  onDrawing?: (evt: IMouseEvent, prePoint: IPoint) => void,
-  onDrawUp?: (evt: IMouseEvent, img: HTMLImageElement) => void,
+  root: HTMLElement | null
+  width?: number | 'auto'
+  height?: number | 'auto'
+  openSmooth?: boolean
+  color?: string
+  lineWidth?: number
+  rotate?: number
+  minWidth?: number
+  minSpeed?: number
+  scaleRatio?: number
+  maxWidthDiffRate?: number
+  resizeDebounceTime?: number
+  maxHistoryLength?: number
+  exportPadding?: number
+  exportMaxWidth?: number
+  exportMaxHeight?: number
+  undoRedoStateChange?: (canUndo: boolean, canRedo: boolean) => void
+  onDrawStart?: (evt: IMouseEvent, prePoint: IPoint) => void
+  onDrawing?: (evt: IMouseEvent, prePoint: IPoint) => void
+  onDrawUp?: (evt: IMouseEvent, img: HTMLImageElement) => void
 }
 
 export default class Signature {

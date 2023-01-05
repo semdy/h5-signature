@@ -1,7 +1,7 @@
-import Common from './common'
+import Base from './base'
 import MouseEvent from './mouseEvents'
 
-class Painter extends Common {
+class Painter extends Base {
 
   constructor(options = {}) {
     super(options)
@@ -85,6 +85,13 @@ class Painter extends Common {
     this.drawCtx.stroke()
   }
 
+  drawByImage(img) {
+    const { scaleRatio } = this.options
+    const { width, height } = this.drawElement
+    this.clear()
+    this.drawCtx.drawImage(img,0,0, width / scaleRatio, height / scaleRatio)
+  }
+
   handleMouseDown(evt) {
     this._isStart = true
     this.prePoint = {
@@ -123,7 +130,6 @@ class Painter extends Common {
     img.src = this.drawElement.toDataURL()
     img.onload = () => {
       this.options.onDrawUp(evt, img)
-      this.drawCtx.clearRect(0, 0, this.drawElement.width, this.drawElement.height)
       img.onload = null
     }
   }
@@ -151,10 +157,15 @@ class Painter extends Common {
     return Math.min(lineWidth, maxWidth)
   }
 
+  clear() {
+    this.drawCtx.clearRect(0, 0, this.drawElement.width, this.drawElement.height)
+  }
+
   destroy() {
     this._isStart = false
     this.prePoint = null
     this.point = null
+    this.clear()
     super.destroy()
     this.mouseEvent.detach()
   }

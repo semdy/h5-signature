@@ -1,7 +1,8 @@
 class UndoRedoManager {
-  constructor() {
+  constructor(maxLength) {
     this._undoStack = []
     this._redoStack = []
+    this.maxLength = maxLength
   }
 
   push(undoFn, redoFn) {
@@ -13,6 +14,9 @@ class UndoRedoManager {
       })
     }
     this._undoStack.push(handler)
+    if (this.maxLength > 0 && this._undoStack.length > this.maxLength) {
+      this._undoStack = this._undoStack.slice(-this.maxLength)
+    }
   }
 
   undo() {

@@ -1,35 +1,26 @@
 import { noop } from './utils'
-import Common from './common'
 import Painter from './painter'
 import UndoRedoManager from './undoRedoManager'
 
-class Stage extends Common {
-
+class Stage {
   constructor(options = {}) {
-    super(options)
     this.options = { ...Stage.defaultOptions, ...options }
     this.drawStack = []
     this.lastCanUndo = false
     this.lastCanRedo = false
     this.painter = new Painter({ ...this.options, onDrawUp: this.onDrawUp.bind(this) })
-    this.undoRedoManager = new UndoRedoManager()
+    this.undoRedoManager = new UndoRedoManager(this.options.maxHistoryLength)
     this.init()
   }
 
   init() {
     const { root } = this.options
-    this.drawElement = document.createElement('canvas')
-    this.drawCtx = this.drawElement.getContext('2d')
-    if (root && root instanceof Element) {
-      root.style.position = 'relative'
-      root.appendChild(this.drawElement)
-    } else {
+    if (!root || !(root instanceof Element)) {
       throw new Error('Invalid root element.')
     }
-    super.init()
     this.painter.init()
+    this.drawElement = this.painter.drawElement
     this.handleUndoRedoStateChange(true)
-    this.tick()
   }
 
   onDrawUp(evt, img) {
@@ -45,32 +36,20 @@ class Stage extends Common {
     this.handleUndoRedoStateChange()
   }
 
-  tick() {
-    this.raf = requestAnimationFrame(() => {
-      this.render()
-      this.tick()
-    })
-  }
-
-  render() {
-    const { scaleRatio } = this.options
-    const { width, height } = this.drawElement
-    this.drawCtx.clearRect(0, 0, width, height)
-    this.drawStack.forEach(item => {
-      this.drawCtx.drawImage(item, 0, 0, width / scaleRatio, height / scaleRatio)
-    })
+  rerender() {
+    const lastImg = this.drawStack[this.drawStack.length - 1]
+    if (lastImg) {
+      this.painter.drawByImage(lastImg)
+    } else {
+      this.painter.clear()
+    }
   }
 
   clear() {
     this.drawStack = []
     this.undoRedoManager.clear()
+    this.painter.clear()
     this.handleUndoRedoStateChange()
-  }
-
-  unTick() {
-    if (this.raf) {
-      cancelAnimationFrame(this.raf)
-    }
   }
 
   setLineWidth(num) {
@@ -99,11 +78,13 @@ class Stage extends Common {
 
   undo() {
     this.undoRedoManager.undo()
+    this.rerender()
     this.handleUndoRedoStateChange()
   }
 
   redo() {
     this.undoRedoManager.redo()
+    this.rerender()
     this.handleUndoRedoStateChange()
   }
 
@@ -116,8 +97,6 @@ class Stage extends Common {
   }
 
   destroy() {
-    super.destroy()
-    this.unTick()
     this.clear()
     this.painter.destroy()
     this.undoRedoManager.clear()
@@ -278,6 +257,7 @@ Stage.defaultOptions = {
   scaleRatio: window.devicePixelRatio || 1,
   maxWidthDiffRate: 20,
   resizeDebounceTime: 200,
+  maxHistoryLength: 0,
   exportPadding: 0,
   exportMaxWidth: null,
   exportMaxHeight: null,
