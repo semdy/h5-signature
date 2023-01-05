@@ -12,6 +12,13 @@
     "html5",
     "手写签名"
   ],
+  "files": [
+    "es",
+    "lib",
+    "index.d.ts",
+    "README.md",
+    "package.json"
+  ],
   "scripts": {
     "start": "webpack serve --mode=development",
     "build": "npm run build:es && npm run build:umd && npm run build:umd-minify",
