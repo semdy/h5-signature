@@ -22,9 +22,9 @@ jobs:
         run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-      # - name: Publish gh-pages
-      #   uses: JamesIves/github-pages-deploy-action@v4.3.3
-      #   with:
-      #     branch: gh-pages
-      #     folder: docs
-      #     clean: true
+      - name: Publish gh-pages
+        uses: JamesIves/github-pages-deploy-action@v4.3.3
+        with:
+          branch: main
+          folder: demo
+          clean: true
