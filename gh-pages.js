@@ -11,7 +11,7 @@ function main() {
     }
     fs.mkdirSync(demoDir)
     fs.copyFileSync(htmlPath, path.resolve(demoDir, './index.html'))
-    fs.copyFileSync(libjsPath, path.resolve(demoDir, './index.min.js'))
+    fs.copyFileSync(libjsPath, path.resolve(demoDir, './index.js'))
   } catch(e) {
     console.log(e)
     process.exit(1)

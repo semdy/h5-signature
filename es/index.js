@@ -668,6 +668,8 @@ var Painter = /*#__PURE__*/function (_Base) {
       _get(_getPrototypeOf(Painter.prototype), "destroy", this).call(this);
 
       this.mouseEvent.detach();
+      this.drawElement.parentElement.removeChild(this.drawElement);
+      this.drawElement = null;
     }
   }, {
     key: "_calculateLineWidth",
