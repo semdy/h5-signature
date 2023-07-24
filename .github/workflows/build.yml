@@ -18,7 +18,7 @@ jobs:
           node-version: 16
       - name: Install dependencies and build 🔧
         run: npm install && npm run build
-      - name: Publish gh-pages
+      - name: Deploying to gh-pages
         uses: JamesIves/github-pages-deploy-action@v4.3.3
         with:
           branch: gh-pages
