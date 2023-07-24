@@ -21,6 +21,6 @@ jobs:
       - name: Publish gh-pages
         uses: JamesIves/github-pages-deploy-action@v4.3.3
         with:
-          branch: main
-          folder: gh-pages
+          branch: gh-pages
+          folder: demo
           clean: true
