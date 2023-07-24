@@ -1,5 +1,5 @@
 # h5-signature
-   基于canvas的手写签名. [online demo](https://semdy.github.io/h5-signature/demo/)
+   基于canvas的手写签名. [online demo](https://semdy.github.io/h5-signature/)
 
 ## Install
 ```bash
