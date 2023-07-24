@@ -168,6 +168,8 @@ class Painter extends Base {
     this.clear()
     super.destroy()
     this.mouseEvent.detach()
+    this.drawElement.parentElement.removeChild(this.drawElement)
+    this.drawElement = null
   }
 
   _calculateLineWidth() {
