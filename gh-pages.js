@@ -7,7 +7,7 @@ const libjsPath = path.resolve(__dirname, './lib/index.js')
 function main() {
   try {
     if (fs.existsSync(ghPagesDir)) {
-      fs.rmdirSync(ghPagesDir)
+      fs.rmSync(ghPagesDir, { recursive: true, force: true })
     }
     fs.mkdirSync(ghPagesDir)
     fs.copyFileSync(htmlPath, path.resolve(ghPagesDir, './index.html'))
