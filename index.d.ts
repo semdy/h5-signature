@@ -33,7 +33,7 @@ export interface IOptions {
   onDrawUp?: (evt: IMouseEvent, img: HTMLImageElement) => void
 }
 
-export default abstract class Signature {
+export default class Signature {
   static defaultOptions: IOptions
 
   constructor(options?: IOptions)
