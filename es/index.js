@@ -1033,22 +1033,26 @@ var Stage = /*#__PURE__*/function () {
           scaleRatio = _this$options.scaleRatio;
       var cutCanvas = document.createElement('canvas');
       var cutCtx = cutCanvas.getContext('2d');
-      cutCanvas.width = cutWidth / scaleRatio;
-      cutCanvas.height = cutHeight / scaleRatio;
+      cutCanvas.width = cutWidth;
+      cutCanvas.height = cutHeight;
       cutCtx.drawImage(canvas, lOffset, tOffset, cutWidth, cutHeight, 0, 0, cutCanvas.width, cutCanvas.height);
 
       if (exportMaxWidth || exportMaxHeight || exportPadding !== 0) {
         var exWidth = cutCanvas.width;
         var exHeight = cutCanvas.height;
 
-        if (exportMaxWidth && exportMaxWidth < exWidth) {
-          exHeight = exHeight * (exportMaxWidth / exWidth);
-          exWidth = exportMaxWidth;
+        var _exportMaxWidth = exportMaxWidth * scaleRatio;
+
+        var _exportMaxHeight = exportMaxHeight * scaleRatio;
+
+        if (exportMaxWidth && _exportMaxWidth < exWidth) {
+          exHeight = exHeight * (_exportMaxWidth / exWidth);
+          exWidth = _exportMaxWidth;
         }
 
-        if (exportMaxHeight && exportMaxHeight < exHeight) {
-          exWidth = exWidth * (exportMaxHeight / exHeight);
-          exHeight = exportMaxHeight;
+        if (exportMaxHeight && _exportMaxHeight < exHeight) {
+          exWidth = exWidth * (_exportMaxHeight / exHeight);
+          exHeight = _exportMaxHeight;
         }
 
         var exportCanvas = document.createElement('canvas');

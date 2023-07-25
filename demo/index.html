@@ -18,6 +18,9 @@
       opacity: .5;
       cursor: default;
     }
+    #preview {
+      transform-origin: 0 0;
+    }
   </style>
 </head>
 
@@ -92,6 +95,7 @@
     const res = stage.getResult()
     if (!res) return alert('no image data')
     document.getElementById('preview').src = res.toDataURL()
+    document.getElementById('preview').style.transform = `scale(${1 / window.devicePixelRatio})`
   })
 
   document.getElementById('downloadBtn').addEventListener('click', function () {
