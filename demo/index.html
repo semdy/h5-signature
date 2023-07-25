@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="renderer" content="webkit">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script src="./index.js"></script>
+  <style>
+    #container {
+      background-color: #f0f0f0;
+      cursor: crosshair;
+      border: 2px dashed #ccc;
+    }
+
+    [disabled] {
+      opacity: .5;
+      cursor: default;
+    }
+  </style>
+</head>
+
+<body>
+<div class="cover">
+  <div id="container" style="width: 100%; max-width: 1000px; height: 600px;"></div>
+  <div style="margin: 10px 0;">
+    <button id="clear">clear</button>
+    <button id="undo">undo</button>
+    <button id="redo">redo</button>
+    <select id="setLineWidth">
+      <option value="2">2</option>
+      <option value="5">5</option>
+      <option value="8" selected>8</option>
+      <option value="15">15</option>
+      <option value="20">20</option>
+    </select>
+    <select id="setColor">
+      <option value="#000" selected>#000</option>
+      <option value="#ff0000">#ff0000</option>
+      <option value="#f90">#f90</option>
+    </select>
+    <button id="exportBtn">view result</button>
+    <button id="downloadBtn">download</button>
+  </div>
+  <img id="preview" src="" alt=""/>
+</div>
+</body>
+<script>
+  var container = document.querySelector('#container')
+
+  var stage = new Signature.default({
+    root: container,
+    // exportPadding: 5,
+    // exportMaxWidth: 300,
+    // exportMaxHeight: 300,
+    undoRedoStateChange: function (canUndo, canRedo) {
+      if (canUndo) {
+        document.getElementById('undo').removeAttribute('disabled')
+      } else {
+        document.getElementById('undo').setAttribute('disabled', true)
+      }
+      if (canRedo) {
+        document.getElementById('redo').removeAttribute('disabled')
+      } else {
+        document.getElementById('redo').setAttribute('disabled', true)
+      }
+    }
+  })
+
+  document.getElementById('clear').addEventListener('click', function () {
+    stage.clear()
+  })
+
+  document.getElementById('undo').addEventListener('click', function () {
+    stage.undo()
+  })
+
+  document.getElementById('redo').addEventListener('click', function () {
+    stage.redo()
+  })
+
+  document.getElementById('setLineWidth').addEventListener('change', function () {
+    stage.setLineWidth(+this.value)
+  })
+
+  document.getElementById('setColor').addEventListener('change', function () {
+    stage.setColor(this.value)
+  })
+
+  document.getElementById('exportBtn').addEventListener('click', function () {
+    const res = stage.getResult()
+    if (!res) return alert('no image data')
+    document.getElementById('preview').src = res.toDataURL()
+  })
+
+  document.getElementById('downloadBtn').addEventListener('click', function () {
+    stage.downloadFile()
+  })
+</script>
+
+</html>

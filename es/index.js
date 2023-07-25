@@ -643,6 +643,11 @@ var Painter = /*#__PURE__*/function (_Base) {
       this.options.color = color;
     }
   }, {
+    key: "setOptions",
+    value: function setOptions(options) {
+      this.options = painter_objectSpread(painter_objectSpread({}, this.options), options);
+    }
+  }, {
     key: "getLineWidth",
     value: function getLineWidth(speed) {
       var maxWidth = this.options.lineWidth;
@@ -668,8 +673,11 @@ var Painter = /*#__PURE__*/function (_Base) {
       _get(_getPrototypeOf(Painter.prototype), "destroy", this).call(this);
 
       this.mouseEvent.detach();
-      this.drawElement.parentElement.removeChild(this.drawElement);
-      this.drawElement = null;
+
+      try {
+        this.drawElement.parentElement.removeChild(this.drawElement);
+        this.drawElement = null;
+      } catch (e) {}
     }
   }, {
     key: "_calculateLineWidth",
@@ -758,6 +766,11 @@ var UndoRedoManager = /*#__PURE__*/function () {
       if (handler instanceof Function) {
         handler();
       }
+    }
+  }, {
+    key: "setMaxHistoryLength",
+    value: function setMaxHistoryLength(len) {
+      this.maxLength = len;
     }
   }, {
     key: "canUndo",
@@ -870,6 +883,18 @@ var Stage = /*#__PURE__*/function () {
     key: "setColor",
     value: function setColor(color) {
       this.painter.setColor(color);
+    }
+  }, {
+    key: "setOptions",
+    value: function setOptions(options) {
+      this.options = stage_objectSpread(stage_objectSpread({}, this.options), options);
+      this.painter.setOptions(stage_objectSpread(stage_objectSpread({}, options), {}, {
+        onDrawUp: this.onDrawUp.bind(this)
+      }));
+
+      if (options && 'maxHistoryLength' in options) {
+        this.undoRedoManager.setMaxHistoryLength(options.maxHistoryLength);
+      }
     }
   }, {
     key: "handleUndoRedoStateChange",
