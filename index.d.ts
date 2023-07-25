@@ -40,7 +40,7 @@ export default class Signature {
 
   setLineWidth: (width: number) => void
   setColor: (color: string) => void
-  setOptions: (options: IOptions) => void
+  setOptions: (options: Omit<IOptions, 'root'>) => void
   clear: () => void
   undo: () => void
   redo: () => void
