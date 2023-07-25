@@ -294,6 +294,7 @@ var Common = /*#__PURE__*/function () {
 
       if (this.tempImageData) {
         this.drawCtx.putImageData(this.tempImageData, 0, 0);
+        this.tempImageData = null;
         this._isResizing = false;
       }
     }

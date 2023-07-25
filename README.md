@@ -52,6 +52,10 @@ set draw lineWidth dynamic
 #### setColor
     parameters: color [string]
 set draw color dynamic
+
+#### setOptions
+  parameters: options Object
+set override options, all properties as constructor parameters, see above
     
 #### clear
 clear the canvas

@@ -32,6 +32,7 @@ class Common {
     this.drawElement.style.cssText = `width: ${eWidth}px; height: ${eHeight}px; touch-action: none;`
     if (this.tempImageData) {
       this.drawCtx.putImageData(this.tempImageData, 0, 0)
+      this.tempImageData = null
       this._isResizing = false
     }
   }
