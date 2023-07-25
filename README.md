@@ -54,7 +54,7 @@ set draw lineWidth dynamic
 set draw color dynamic
 
 #### setOptions
-  parameters: options Object
+    parameters: options Object
 set override options, all properties as constructor parameters, see above
     
 #### clear
