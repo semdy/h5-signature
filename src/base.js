@@ -30,20 +30,32 @@ class Common {
       this.drawElement.height = eHeight
     }
     this.drawElement.style.cssText = `width: ${eWidth}px; height: ${eHeight}px; touch-action: none;`
+    if (this.tempImageData) {
+      this.drawCtx.putImageData(this.tempImageData, 0, 0)
+      this._isResizing = false
+    }
   }
 
   attachEvents() {
     const { width, height } = this.options
 
-    this.debounceReisize = debounce(this.resize.bind(this), this.options.resizeDebounceTime)
+    const debounceReisize = debounce(this.resize.bind(this), this.options.resizeDebounceTime)
+
+    this.resizeHandle = (e) => {
+      if (!this._isResizing) {
+        this.tempImageData = this.drawCtx.getImageData(0,0, this.drawElement.width, this.drawElement.height)
+      }
+      this._isResizing = true
+      debounceReisize(e)
+    }
 
     if (width === 'auto' || height === 'auto') {
-      window.addEventListener(EVENTS.RESIZE, this.debounceReisize, false)
+      window.addEventListener(EVENTS.RESIZE, this.resizeHandle, false)
     }
   }
 
   detachEvents() {
-    window.removeEventListener(EVENTS.RESIZE, this.debounceReisize, false)
+    window.removeEventListener(EVENTS.RESIZE, this.resizeHandle, false)
   }
 
   destroy() {
