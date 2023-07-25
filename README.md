@@ -55,7 +55,7 @@ set draw color dynamic
 
 #### setOptions
     parameters: options Object
-set override options, all properties as constructor parameters, see above
+set override options, all properties same as constructor parameters, see above
     
 #### clear
 clear the canvas
