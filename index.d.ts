@@ -11,7 +11,6 @@ export interface IPoint {
 export type IMouseEvent = MouseEvent & { stageX: number; stageY: number }
 
 export interface IOptions {
-  root: HTMLElement | null
   width?: number | 'auto'
   height?: number | 'auto'
   openSmooth?: boolean
@@ -33,14 +32,16 @@ export interface IOptions {
   onDrawUp?: (evt: IMouseEvent, img: HTMLImageElement) => void
 }
 
+export type ConstructorOptions = IOptions & { root: HTMLElement | null }
+
 export default class Signature {
   static defaultOptions: IOptions
 
-  constructor(options?: IOptions)
+  constructor(options?: ConstructorOptions)
 
   setLineWidth: (width: number) => void
   setColor: (color: string) => void
-  setOptions: (options: Omit<IOptions, 'root'>) => void
+  setOptions: (options: IOptions) => void
   clear: () => void
   undo: () => void
   redo: () => void
