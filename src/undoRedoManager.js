@@ -33,6 +33,10 @@ class UndoRedoManager {
     }
   }
 
+  setMaxHistoryLength(len) {
+    this.maxLength = len
+  }
+
   canUndo() {
     return this._undoStack.length > 0
   }

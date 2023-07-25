@@ -60,6 +60,14 @@ class Stage {
     this.painter.setColor(color)
   }
 
+  setOptions(options) {
+    this.options = { ...this.options, ...options }
+    this.painter.setOptions({ ...options, onDrawUp: this.onDrawUp.bind(this) })
+    if (options && 'maxHistoryLength' in options) {
+      this.undoRedoManager.setMaxHistoryLength(options.maxHistoryLength)
+    }
+  }
+
   handleUndoRedoStateChange(init) {
     const canUndo = this.canUndo()
     const canRedo = this.canRedo()

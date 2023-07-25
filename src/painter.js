@@ -148,6 +148,10 @@ class Painter extends Base {
     this.options.color = color
   }
 
+  setOptions(options) {
+    this.options = { ...this.options, ...options }
+  }
+
   getLineWidth(speed) {
     const maxWidth = this.options.lineWidth
     const minWidth = this.options.minWidth
@@ -168,8 +172,10 @@ class Painter extends Base {
     this.clear()
     super.destroy()
     this.mouseEvent.detach()
-    this.drawElement.parentElement.removeChild(this.drawElement)
-    this.drawElement = null
+    try {
+      this.drawElement.parentElement.removeChild(this.drawElement)
+      this.drawElement = null
+    } catch(e) {}
   }
 
   _calculateLineWidth() {

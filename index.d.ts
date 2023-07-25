@@ -1,4 +1,4 @@
-interface IPoint {
+export interface IPoint {
   x: number
   y: number
   t: number
@@ -8,9 +8,9 @@ interface IPoint {
   lineWidth?: number
 }
 
-type IMouseEvent = MouseEvent & { stageX: number; stageY: number }
+export type IMouseEvent = MouseEvent & { stageX: number; stageY: number }
 
-interface IOptions {
+export interface IOptions {
   root: HTMLElement | null
   width?: number | 'auto'
   height?: number | 'auto'
@@ -33,13 +33,14 @@ interface IOptions {
   onDrawUp?: (evt: IMouseEvent, img: HTMLImageElement) => void
 }
 
-export default class Signature {
+export default abstract class Signature {
   static defaultOptions: IOptions
 
   constructor(options?: IOptions)
 
   setLineWidth: (width: number) => void
   setColor: (color: string) => void
+  setOptions: (options: IOptions) => void
   clear: () => void
   undo: () => void
   redo: () => void
