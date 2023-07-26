@@ -677,6 +677,7 @@ var Painter = /*#__PURE__*/function (_Base) {
   }, {
     key: "clear",
     value: function clear() {
+      if (!this.drawElement) return;
       this.drawCtx.clearRect(0, 0, this.drawElement.width, this.drawElement.height);
     }
   }, {
@@ -1008,62 +1009,66 @@ var Stage = /*#__PURE__*/function () {
   }, {
     key: "getResult",
     value: function getResult(origin) {
-      var canvas = this.drawElement;
+      try {
+        var canvas = this.drawElement;
 
-      if (this.options.rotate !== 0) {
-        canvas = this.getRotateCanvas(this.options.rotate);
-      }
-
-      var _this$getValidBound = this.getValidBound(canvas),
-          cutWidth = _this$getValidBound.cutWidth,
-          cutHeight = _this$getValidBound.cutHeight,
-          lOffset = _this$getValidBound.lOffset,
-          tOffset = _this$getValidBound.tOffset;
-
-      if (cutWidth <= 0 || cutHeight <= 0) return;
-
-      if (origin) {
-        return canvas;
-      }
-
-      var _this$options = this.options,
-          exportMaxWidth = _this$options.exportMaxWidth,
-          exportMaxHeight = _this$options.exportMaxHeight,
-          exportPadding = _this$options.exportPadding,
-          scaleRatio = _this$options.scaleRatio;
-      var cutCanvas = document.createElement('canvas');
-      var cutCtx = cutCanvas.getContext('2d');
-      cutCanvas.width = cutWidth;
-      cutCanvas.height = cutHeight;
-      cutCtx.drawImage(canvas, lOffset, tOffset, cutWidth, cutHeight, 0, 0, cutCanvas.width, cutCanvas.height);
-
-      if (exportMaxWidth || exportMaxHeight || exportPadding !== 0) {
-        var exWidth = cutCanvas.width;
-        var exHeight = cutCanvas.height;
-
-        var _exportMaxWidth = exportMaxWidth * scaleRatio;
-
-        var _exportMaxHeight = exportMaxHeight * scaleRatio;
-
-        if (exportMaxWidth && _exportMaxWidth < exWidth) {
-          exHeight = exHeight * (_exportMaxWidth / exWidth);
-          exWidth = _exportMaxWidth;
+        if (this.options.rotate !== 0) {
+          canvas = this.getRotateCanvas(this.options.rotate);
         }
 
-        if (exportMaxHeight && _exportMaxHeight < exHeight) {
-          exWidth = exWidth * (_exportMaxHeight / exHeight);
-          exHeight = _exportMaxHeight;
+        var _this$getValidBound = this.getValidBound(canvas),
+            cutWidth = _this$getValidBound.cutWidth,
+            cutHeight = _this$getValidBound.cutHeight,
+            lOffset = _this$getValidBound.lOffset,
+            tOffset = _this$getValidBound.tOffset;
+
+        if (cutWidth <= 0 || cutHeight <= 0) return;
+
+        if (origin) {
+          return canvas;
         }
 
-        var exportCanvas = document.createElement('canvas');
-        var exportCtx = exportCanvas.getContext('2d');
-        exportCanvas.width = exWidth;
-        exportCanvas.height = exHeight;
-        exportCtx.drawImage(cutCanvas, exportPadding, exportPadding, exportCanvas.width - exportPadding * 2, exportCanvas.height - exportPadding * 2);
-        return exportCanvas;
-      }
+        var _this$options = this.options,
+            exportMaxWidth = _this$options.exportMaxWidth,
+            exportMaxHeight = _this$options.exportMaxHeight,
+            exportPadding = _this$options.exportPadding,
+            scaleRatio = _this$options.scaleRatio;
+        var cutCanvas = document.createElement('canvas');
+        var cutCtx = cutCanvas.getContext('2d');
+        cutCanvas.width = cutWidth;
+        cutCanvas.height = cutHeight;
+        cutCtx.drawImage(canvas, lOffset, tOffset, cutWidth, cutHeight, 0, 0, cutCanvas.width, cutCanvas.height);
 
-      return cutCanvas;
+        if (exportMaxWidth || exportMaxHeight || exportPadding !== 0) {
+          var exWidth = cutCanvas.width;
+          var exHeight = cutCanvas.height;
+
+          var _exportMaxWidth = exportMaxWidth * scaleRatio;
+
+          var _exportMaxHeight = exportMaxHeight * scaleRatio;
+
+          if (exportMaxWidth && _exportMaxWidth < exWidth) {
+            exHeight = exHeight * (_exportMaxWidth / exWidth);
+            exWidth = _exportMaxWidth;
+          }
+
+          if (exportMaxHeight && _exportMaxHeight < exHeight) {
+            exWidth = exWidth * (_exportMaxHeight / exHeight);
+            exHeight = _exportMaxHeight;
+          }
+
+          var exportCanvas = document.createElement('canvas');
+          var exportCtx = exportCanvas.getContext('2d');
+          exportCanvas.width = exWidth;
+          exportCanvas.height = exHeight;
+          exportCtx.drawImage(cutCanvas, exportPadding, exportPadding, exportCanvas.width - exportPadding * 2, exportCanvas.height - exportPadding * 2);
+          return exportCanvas;
+        }
+
+        return cutCanvas;
+      } catch (e) {
+        console.error(e);
+      }
     }
   }, {
     key: "getRotateCanvas",

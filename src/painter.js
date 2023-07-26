@@ -162,6 +162,7 @@ class Painter extends Base {
   }
 
   clear() {
+    if (!this.drawElement) return
     this.drawCtx.clearRect(0, 0, this.drawElement.width, this.drawElement.height)
   }
 
