@@ -12,12 +12,12 @@ class Common {
     const { width, height, root, scaleRatio } = this.options
     let eWidth, eHeight
     if (width === 'auto') {
-      eWidth = root.offsetWidth
+      eWidth = root.clientWidth
     } else {
       eWidth = width
     }
     if (height === 'auto') {
-      eHeight = root.offsetHeight
+      eHeight = root.clientHeight
     } else {
       eHeight = height
     }
