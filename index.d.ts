@@ -34,6 +34,14 @@ export interface IOptions {
 
 export type ConstructorOptions = IOptions & { root: HTMLElement | null }
 
+export class Base {
+  init: () => void
+  resize: () => void
+  attachEvents: () => void
+  detachEvents: () => void
+  destroy: () => void
+}
+
 export default class Signature {
   static defaultOptions: IOptions
 

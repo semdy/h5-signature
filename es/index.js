@@ -25,6 +25,7 @@ var __webpack_exports__ = {};
 
 // EXPORTS
 __webpack_require__.d(__webpack_exports__, {
+  "X": function() { return /* reexport */ base; },
   "Z": function() { return /* binding */ src; }
 });
 
@@ -1172,6 +1173,9 @@ Stage.defaultOptions = {
 /* harmony default export */ var stage = (Stage);
 ;// CONCATENATED MODULE: ./src/index.js
 
+
+
 /* harmony default export */ var src = (stage);
+var __webpack_exports__Base = __webpack_exports__.X;
 var __webpack_exports__default = __webpack_exports__.Z;
-export { __webpack_exports__default as default };
+export { __webpack_exports__Base as Base, __webpack_exports__default as default };
