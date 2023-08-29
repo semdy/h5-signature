@@ -67,7 +67,7 @@ function _createClass(Constructor, protoProps, staticProps) {
   return Constructor;
 }
 ;// CONCATENATED MODULE: ./src/utils.js
-var isTouch = 'ontouchstart' in document || navigator.maxTouchPoints;
+var isTouch = "ontouchstart" in document || navigator.maxTouchPoints;
 var ua = navigator.userAgent;
 var pointerEnabled = window.navigator.msPointerEnabled;
 var isIeMobile = pointerEnabled && /IEMobile/i.test(ua);
@@ -87,22 +87,29 @@ if (typeof document.hidden !== "undefined") {
 }
 
 var EVENTS = isIeMobile ? {
-  START: 'MSPointerDown',
-  MOVE: 'MSPointerMove',
-  END: 'MSPointerCancel',
+  START: "MSPointerDown",
+  MOVE: "MSPointerMove",
+  END: "MSPointerCancel",
   HIDDEN: utils_hidden,
   VISIBILITYCHANGE: visibilityChange
 } : {
-  START: isTouch ? 'touchstart' : 'mousedown',
-  MOVE: isTouch ? 'touchmove' : 'mousemove',
-  END: isTouch ? 'touchend' : 'mouseup',
+  START: isTouch ? "touchstart" : "mousedown",
+  MOVE: isTouch ? "touchmove" : "mousemove",
+  END: isTouch ? "touchend" : "mouseup",
   HIDDEN: utils_hidden,
   VISIBILITYCHANGE: visibilityChange
 };
-EVENTS.RESIZE = 'onorientationchange' in window ? 'orientationchange' : 'resize';
+EVENTS.RESIZE = "onorientationchange" in window ? "orientationchange" : "resize";
 function noop() {}
 function getEvent(evt) {
-  return evt.changedTouches ? evt.changedTouches[0] : evt;
+  if (evt.changedTouches) {
+    var event = evt.changedTouches[0];
+    event.touchLength = evt.changedTouches.length;
+    return event;
+  }
+
+  evt.touchLength = 1;
+  return evt;
 }
 function debounce(func, wait) {
   var timer = null;
@@ -270,13 +277,13 @@ var Common = /*#__PURE__*/function () {
           scaleRatio = _this$options.scaleRatio;
       var eWidth, eHeight;
 
-      if (width === 'auto') {
+      if (width === "auto") {
         eWidth = root.clientWidth;
       } else {
         eWidth = width;
       }
 
-      if (height === 'auto') {
+      if (height === "auto") {
         eHeight = root.clientHeight;
       } else {
         eHeight = height;
@@ -318,7 +325,7 @@ var Common = /*#__PURE__*/function () {
         debounceReisize(e);
       };
 
-      if (width === 'auto' || height === 'auto') {
+      if (width === "auto" || height === "auto") {
         window.addEventListener(EVENTS.RESIZE, this.resizeHandle, false);
       }
     }
@@ -375,7 +382,7 @@ var MouseEvent = /*#__PURE__*/function () {
       this.element.addEventListener(EVENTS.START, this.onTouchStart, false);
       this.element.addEventListener(EVENTS.MOVE, this.onTouchMove, false);
       this.element.addEventListener(EVENTS.END, this.onTouchEnd, false);
-      this.element.addEventListener('mouseout', this.onMouseOut, false);
+      this.element.addEventListener("mouseout", this.onMouseOut, false);
     }
   }, {
     key: "onTouchStart",
@@ -444,7 +451,7 @@ var MouseEvent = /*#__PURE__*/function () {
       this.element.removeEventListener(EVENTS.START, this.onTouchStart, false);
       this.element.removeEventListener(EVENTS.MOVE, this.onTouchMove, false);
       this.element.removeEventListener(EVENTS.END, this.onTouchEnd, false);
-      this.element.removeEventListener('mouseout', this.onMouseOut, false);
+      this.element.removeEventListener("mouseout", this.onMouseOut, false);
     }
   }]);
 
@@ -495,6 +502,8 @@ var Painter = /*#__PURE__*/function (_Base) {
     _this = _super.call(this, options);
     _this.options = options;
     _this._isStart = false;
+    _this._isMoved = false;
+    _this._touchCount = 0;
     _this.prePoint = {};
     _this.point = {};
     return _this;
@@ -504,8 +513,8 @@ var Painter = /*#__PURE__*/function (_Base) {
     key: "init",
     value: function init() {
       var root = this.options.root;
-      this.drawElement = document.createElement('canvas');
-      this.drawCtx = this.drawElement.getContext('2d');
+      this.drawElement = document.createElement("canvas");
+      this.drawCtx = this.drawElement.getContext("2d");
       root.appendChild(this.drawElement);
 
       _get(_getPrototypeOf(Painter.prototype), "init", this).call(this);
@@ -539,7 +548,7 @@ var Painter = /*#__PURE__*/function (_Base) {
       point.lastX = x2;
       point.lastY = y2;
 
-      if (typeof prePoint.lastX === 'number') {
+      if (typeof prePoint.lastX === "number") {
         var lineWidth = (prePoint.lineWidth + point.lineWidth) / 2;
         this.drawCurveLine(prePoint.lastX, prePoint.lastY, prePoint.x, prePoint.y, x1, y1, lineWidth);
       }
@@ -554,7 +563,7 @@ var Painter = /*#__PURE__*/function (_Base) {
       point.lastX = prePoint.x + halfW;
       point.lastY = prePoint.y + halfH;
 
-      if (typeof prePoint.lastX === 'number') {
+      if (typeof prePoint.lastX === "number") {
         this.drawCurveLine(prePoint.lastX, prePoint.lastY, prePoint.x, prePoint.y, point.lastX, point.lastY, this.options.lineWidth);
       }
     }
@@ -590,6 +599,13 @@ var Painter = /*#__PURE__*/function (_Base) {
   }, {
     key: "handleMouseDown",
     value: function handleMouseDown(evt) {
+      this._touchCount++;
+
+      if (evt.touchLength > 1 || this._touchCount > 1) {
+        this._isStart = false;
+        return;
+      }
+
       this._isStart = true;
       this.prePoint = {
         x: evt.stageX,
@@ -600,40 +616,48 @@ var Painter = /*#__PURE__*/function (_Base) {
         color: this.options.color,
         lineWidth: this.options.lineWidth
       };
-      this.drawCtx.lineJoin = 'round';
-      this.drawCtx.lineCap = 'round';
-      this.drawCtx.strokeStyle = this.options.color;
-      this.drawStartPoint(evt);
+      this.drawCtx.lineJoin = "round";
+      this.drawCtx.lineCap = "round";
+      this.drawCtx.strokeStyle = this.options.color; // this.drawStartPoint(evt);
+
       this.options.onDrawStart(evt, this.prePoint);
     }
   }, {
     key: "handleMouseMove",
     value: function handleMouseMove(evt) {
-      if (this._isStart) {
-        this.point = {
-          x: evt.stageX,
-          y: evt.stageY,
-          t: Date.now(),
-          color: this.options.color
-        };
-        this.point.lineWidth = this._calculateLineWidth();
+      if (!this._isStart) return;
+      this.point = {
+        x: evt.stageX,
+        y: evt.stageY,
+        t: Date.now(),
+        color: this.options.color
+      };
+      this.point.lineWidth = this._calculateLineWidth();
 
-        if (this.options.openSmooth) {
-          this.drawSmoothLine(this.prePoint, this.point);
-        } else {
-          this.drawNoSmoothLine(this.prePoint, this.point);
-        }
-
-        this.prePoint = painter_objectSpread({}, this.point);
-        this.options.onDrawing(evt, this.point);
+      if (this.options.openSmooth) {
+        this.drawSmoothLine(this.prePoint, this.point);
+      } else {
+        this.drawNoSmoothLine(this.prePoint, this.point);
       }
+
+      this.prePoint = painter_objectSpread({}, this.point);
+      this._isMoved = true;
+      this.options.onDrawing(evt, this.point);
     }
   }, {
     key: "handleMouseUp",
     value: function handleMouseUp(evt) {
       var _this2 = this;
 
+      this._touchCount = 0;
+      if (!this._isStart) return;
+
+      if (!this._isMoved) {
+        this.drawStartPoint(evt);
+      }
+
       this._isStart = false;
+      this._isMoved = false;
       var img = new Image();
       img.src = this.drawElement.toDataURL();
 
@@ -849,7 +873,7 @@ var Stage = /*#__PURE__*/function () {
       var root = this.options.root;
 
       if (!root || !(root instanceof Element)) {
-        throw new Error('Invalid root element.');
+        throw new Error("Invalid root element.");
       }
 
       this.painter.init();
@@ -911,7 +935,7 @@ var Stage = /*#__PURE__*/function () {
         onDrawUp: this.onDrawUp.bind(this)
       }));
 
-      if (options && 'maxHistoryLength' in options) {
+      if (options && "maxHistoryLength" in options) {
         this.undoRedoManager.setMaxHistoryLength(options.maxHistoryLength);
       }
     }
@@ -969,7 +993,7 @@ var Stage = /*#__PURE__*/function () {
   }, {
     key: "getValidBound",
     value: function getValidBound(canvas) {
-      var ctx = canvas.getContext('2d');
+      var ctx = canvas.getContext("2d");
       var width = canvas.width,
           height = canvas.height;
       var imgData = ctx.getImageData(0, 0, width, height).data;
@@ -1034,8 +1058,8 @@ var Stage = /*#__PURE__*/function () {
             exportMaxHeight = _this$options.exportMaxHeight,
             exportPadding = _this$options.exportPadding,
             scaleRatio = _this$options.scaleRatio;
-        var cutCanvas = document.createElement('canvas');
-        var cutCtx = cutCanvas.getContext('2d');
+        var cutCanvas = document.createElement("canvas");
+        var cutCtx = cutCanvas.getContext("2d");
         cutCanvas.width = cutWidth;
         cutCanvas.height = cutHeight;
         cutCtx.drawImage(canvas, lOffset, tOffset, cutWidth, cutHeight, 0, 0, cutCanvas.width, cutCanvas.height);
@@ -1058,8 +1082,8 @@ var Stage = /*#__PURE__*/function () {
             exHeight = _exportMaxHeight;
           }
 
-          var exportCanvas = document.createElement('canvas');
-          var exportCtx = exportCanvas.getContext('2d');
+          var exportCanvas = document.createElement("canvas");
+          var exportCtx = exportCanvas.getContext("2d");
           exportCanvas.width = exWidth;
           exportCanvas.height = exHeight;
           exportCtx.drawImage(cutCanvas, exportPadding, exportPadding, exportCanvas.width - exportPadding * 2, exportCanvas.height - exportPadding * 2);
@@ -1082,7 +1106,7 @@ var Stage = /*#__PURE__*/function () {
         degree = degree < -90 ? 180 : -90;
       }
 
-      var canvas = document.createElement('canvas');
+      var canvas = document.createElement("canvas");
       var w = this.drawElement.width;
       var h = this.drawElement.height;
 
@@ -1094,7 +1118,7 @@ var Stage = /*#__PURE__*/function () {
         canvas.height = w;
       }
 
-      var ctx = canvas.getContext('2d');
+      var ctx = canvas.getContext("2d");
       ctx.rotate(degree * Math.PI / 180);
 
       if (degree === 90) {
@@ -1112,8 +1136,8 @@ var Stage = /*#__PURE__*/function () {
   }, {
     key: "base64ToBlob",
     value: function base64ToBlob(code) {
-      var parts = code.split(';base64,');
-      var contentType = parts[0].split(':')[1];
+      var parts = code.split(";base64,");
+      var contentType = parts[0].split(":")[1];
       var raw = window.atob(parts[1]);
       var rawLength = raw.length;
       var uInt8Array = new Uint8Array(rawLength);
@@ -1130,11 +1154,11 @@ var Stage = /*#__PURE__*/function () {
     key: "downloadFile",
     value: function downloadFile() {
       var fileName = Date.now();
-      var aLink = document.createElement('a');
+      var aLink = document.createElement("a");
       var blob = this.base64ToBlob(this.drawElement.toDataURL());
       var urlObj = URL.createObjectURL(blob);
-      var evt = document.createEvent('HTMLEvents');
-      evt.initEvent('click', true, true); // initEvent 不加后两个参数在FF下会报错  事件类型，是否冒泡，是否阻止浏览器的默认行为
+      var evt = document.createEvent("HTMLEvents");
+      evt.initEvent("click", true, true); // initEvent 不加后两个参数在FF下会报错  事件类型，是否冒泡，是否阻止浏览器的默认行为
 
       aLink.download = fileName;
       aLink.href = urlObj;
@@ -1150,10 +1174,10 @@ var Stage = /*#__PURE__*/function () {
 
 Stage.defaultOptions = {
   root: null,
-  width: 'auto',
-  height: 'auto',
+  width: "auto",
+  height: "auto",
   openSmooth: true,
-  color: '#000',
+  color: "#000",
   lineWidth: 8,
   rotate: 0,
   minWidth: 2,
