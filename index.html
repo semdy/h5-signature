@@ -8,6 +8,9 @@
   <title>Document</title>
   <script src="./index.js"></script>
   <style>
+    body {
+      -webkit-user-select: none;
+    }
     #container {
       background-color: #f0f0f0;
       cursor: crosshair;
@@ -27,6 +30,7 @@
 <body>
 <div class="cover">
   <div id="container" style="width: 100%; max-width: 1000px; height: 600px;"></div>
+  <div id="touch"></div>
   <div style="margin: 10px 0;">
     <button id="clear">clear</button>
     <button id="undo">undo</button>
