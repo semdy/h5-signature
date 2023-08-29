@@ -83,9 +83,10 @@ export function getEventXY(el, e) {
     };
   }
   const box = getBoundingClientRect(el);
+  const scale = box.width / el.clientWidth;
   return {
-    x: e.clientX - box.left,
-    y: e.clientY - box.top,
+    x: (e.clientX - box.left) / scale,
+    y: (e.clientY - box.top) / scale,
   };
 }
 
