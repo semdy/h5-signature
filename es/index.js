@@ -89,13 +89,15 @@ if (typeof document.hidden !== "undefined") {
 var EVENTS = isIeMobile ? {
   START: "MSPointerDown",
   MOVE: "MSPointerMove",
-  END: "MSPointerCancel",
+  END: "MSPointerUp",
+  CANCEL: "MSPointerCancel",
   HIDDEN: utils_hidden,
   VISIBILITYCHANGE: visibilityChange
 } : {
   START: isTouch ? "touchstart" : "mousedown",
   MOVE: isTouch ? "touchmove" : "mousemove",
   END: isTouch ? "touchend" : "mouseup",
+  CANCEL: isTouch ? "touchcancel" : "mouseout",
   HIDDEN: utils_hidden,
   VISIBILITYCHANGE: visibilityChange
 };
@@ -390,7 +392,7 @@ var MouseEvent = /*#__PURE__*/function () {
       this.element.addEventListener(EVENTS.START, this.onTouchStart, false);
       this.element.addEventListener(EVENTS.MOVE, this.onTouchMove, false);
       this.element.addEventListener(EVENTS.END, this.onTouchEnd, false);
-      this.element.addEventListener("mouseout", this.onMouseOut, false);
+      this.element.addEventListener(EVENTS.CANCEL, this.onMouseOut, false);
     }
   }, {
     key: "onTouchStart",
@@ -459,7 +461,7 @@ var MouseEvent = /*#__PURE__*/function () {
       this.element.removeEventListener(EVENTS.START, this.onTouchStart, false);
       this.element.removeEventListener(EVENTS.MOVE, this.onTouchMove, false);
       this.element.removeEventListener(EVENTS.END, this.onTouchEnd, false);
-      this.element.removeEventListener("mouseout", this.onMouseOut, false);
+      this.element.removeEventListener(EVENTS.CANCEL, this.onMouseOut, false);
     }
   }]);
 
@@ -532,7 +534,7 @@ var Painter = /*#__PURE__*/function (_Base) {
         onMouseDown: this.handleMouseDown.bind(this),
         onMouseMove: this.handleMouseMove.bind(this),
         onMouseUp: this.handleMouseUp.bind(this),
-        onMouseOut: this.handleMouseOut.bind(this)
+        onMouseOut: this.handleMouseUp.bind(this)
       });
       this.mouseEvent.attach(this.drawElement);
     }
@@ -677,13 +679,6 @@ var Painter = /*#__PURE__*/function (_Base) {
 
         img.onload = null;
       };
-    }
-  }, {
-    key: "handleMouseOut",
-    value: function handleMouseOut(evt) {
-      if (this._isStart) {
-        this.handleMouseUp(evt);
-      }
     }
   }, {
     key: "setLineWidth",
