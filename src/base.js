@@ -8,7 +8,7 @@ class Common {
   }
 
   resize() {
-    const { width, height, root, scaleRatio } = this.options;
+    const { width, height, maxWidth, root, scaleRatio } = this.options;
     let eWidth, eHeight;
     if (width === "auto") {
       eWidth = root.clientWidth;
@@ -27,6 +27,11 @@ class Common {
     } else {
       this.drawElement.width = eWidth;
       this.drawElement.height = eHeight;
+    }
+    if (maxWidth) {
+      const origWidth = eWidth;
+      eWidth = Math.min(eWidth, maxWidth);
+      eHeight = Math.min(eHeight, (eWidth / origWidth) * eHeight);
     }
     this.drawElement.style.cssText = `width: ${eWidth}px; height: ${eHeight}px; touch-action: none;`;
     if (this.tempImageData) {

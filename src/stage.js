@@ -300,6 +300,7 @@ Stage.defaultOptions = {
   minWidth: 2,
   minSpeed: 1.5,
   scaleRatio: window.devicePixelRatio || 1,
+  maxWidth: null,
   maxWidthDiffRate: 20,
   resizeDebounceTime: 200,
   maxHistoryLength: 0,

@@ -20,6 +20,7 @@ export interface IOptions {
   minWidth?: number
   minSpeed?: number
   scaleRatio?: number
+  maxWidth?: number
   maxWidthDiffRate?: number
   resizeDebounceTime?: number
   maxHistoryLength?: number

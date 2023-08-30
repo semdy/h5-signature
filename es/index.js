@@ -274,6 +274,7 @@ var Common = /*#__PURE__*/function () {
       var _this$options = this.options,
           width = _this$options.width,
           height = _this$options.height,
+          maxWidth = _this$options.maxWidth,
           root = _this$options.root,
           scaleRatio = _this$options.scaleRatio;
       var eWidth, eHeight;
@@ -297,6 +298,12 @@ var Common = /*#__PURE__*/function () {
       } else {
         this.drawElement.width = eWidth;
         this.drawElement.height = eHeight;
+      }
+
+      if (maxWidth) {
+        var origWidth = eWidth;
+        eWidth = Math.min(eWidth, maxWidth);
+        eHeight = Math.min(eHeight, eWidth / origWidth * eHeight);
       }
 
       this.drawElement.style.cssText = "width: ".concat(eWidth, "px; height: ").concat(eHeight, "px; touch-action: none;");
@@ -1201,6 +1208,7 @@ Stage.defaultOptions = {
   minWidth: 2,
   minSpeed: 1.5,
   scaleRatio: window.devicePixelRatio || 1,
+  maxWidth: null,
   maxWidthDiffRate: 20,
   resizeDebounceTime: 200,
   maxHistoryLength: 0,

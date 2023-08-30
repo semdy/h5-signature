@@ -31,6 +31,7 @@ new Signature.default({
   minWidth: 2, // minimize linWidth
   minSpeed: 1.5, // minimize brush move speed
   scaleRatio: window.devicePixelRatio, // canvas scale ratio
+  maxWidth: null, // canvas element style max width
   maxWidthDiffRate: 20, // Smooth transition threshold
   resizeDebounceTime: 200, // window resize debounce elapse time
   maxHistoryLength: 0, // max history length, no limit if set to 0
