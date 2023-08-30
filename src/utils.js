@@ -22,7 +22,8 @@ export const EVENTS = isIeMobile
   ? {
       START: "MSPointerDown",
       MOVE: "MSPointerMove",
-      END: "MSPointerCancel",
+      END: "MSPointerUp",
+      CANCEL: "MSPointerCancel",
       HIDDEN: hidden,
       VISIBILITYCHANGE: visibilityChange,
     }
@@ -30,6 +31,7 @@ export const EVENTS = isIeMobile
       START: isTouch ? "touchstart" : "mousedown",
       MOVE: isTouch ? "touchmove" : "mousemove",
       END: isTouch ? "touchend" : "mouseup",
+      CANCEL: isTouch ? "touchcancel" : "mouseout",
       HIDDEN: hidden,
       VISIBILITYCHANGE: visibilityChange,
     };

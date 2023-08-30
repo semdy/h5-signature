@@ -23,7 +23,7 @@ class Painter extends Base {
       onMouseDown: this.handleMouseDown.bind(this),
       onMouseMove: this.handleMouseMove.bind(this),
       onMouseUp: this.handleMouseUp.bind(this),
-      onMouseOut: this.handleMouseOut.bind(this),
+      onMouseOut: this.handleMouseUp.bind(this),
     });
     this.mouseEvent.attach(this.drawElement);
   }
@@ -160,12 +160,6 @@ class Painter extends Base {
       this.options.onDrawUp(evt, img);
       img.onload = null;
     };
-  }
-
-  handleMouseOut(evt) {
-    if (this._isStart) {
-      this.handleMouseUp(evt);
-    }
   }
 
   setLineWidth(num) {

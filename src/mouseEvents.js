@@ -19,7 +19,7 @@ class MouseEvent {
     this.element.addEventListener(EVENTS.START, this.onTouchStart, false);
     this.element.addEventListener(EVENTS.MOVE, this.onTouchMove, false);
     this.element.addEventListener(EVENTS.END, this.onTouchEnd, false);
-    this.element.addEventListener("mouseout", this.onMouseOut, false);
+    this.element.addEventListener(EVENTS.CANCEL, this.onMouseOut, false);
   }
 
   onTouchStart(event) {
@@ -81,7 +81,7 @@ class MouseEvent {
     this.element.removeEventListener(EVENTS.START, this.onTouchStart, false);
     this.element.removeEventListener(EVENTS.MOVE, this.onTouchMove, false);
     this.element.removeEventListener(EVENTS.END, this.onTouchEnd, false);
-    this.element.removeEventListener("mouseout", this.onMouseOut, false);
+    this.element.removeEventListener(EVENTS.CANCEL, this.onMouseOut, false);
   }
 }
 
