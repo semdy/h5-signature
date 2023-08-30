@@ -8,6 +8,7 @@ class Stage {
     this.drawStack = [];
     this.lastCanUndo = false;
     this.lastCanRedo = false;
+    this._isEmpty = true;
     this.painter = new Painter({
       ...this.options,
       onDrawUp: this.onDrawUp.bind(this),
@@ -105,6 +106,10 @@ class Stage {
 
   canRedo() {
     return this.undoRedoManager.canRedo();
+  }
+
+  isEmpty() {
+    return this.painter.isEmpy();
   }
 
   destroy() {

@@ -55,6 +55,7 @@ export default class Signature {
   redo: () => void
   canUndo: () => void
   canRedo: () => void
+  isEmpty: () => boolean
   getResult: (origin?: boolean) => HTMLCanvasElement | undefined
   getRotateCanvas: (degree: -90 | 90 | -180 | 180) => HTMLCanvasElement
   base64ToBlob: (code: string) => Blob

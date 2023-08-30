@@ -7,6 +7,7 @@ class Painter extends Base {
     this.options = options;
     this._isStart = false;
     this._isMoved = false;
+    this._isEmpty = true;
     this._touchCount = 0;
     this.prePoint = {};
     this.point = {};
@@ -140,6 +141,7 @@ class Painter extends Base {
     }
     this.prePoint = { ...this.point };
     this._isMoved = true;
+    this._isEmpty = false;
     this.options.onDrawing(evt, this.point);
   }
 
@@ -150,6 +152,7 @@ class Painter extends Base {
       this.drawStartPoint(evt);
     }
     this._isStart = false;
+    this._isEmpty = false;
     this._isMoved = false;
     const img = new Image();
     img.src = this.drawElement.toDataURL();
@@ -191,7 +194,12 @@ class Painter extends Base {
     return Math.min(lineWidth, maxWidth);
   }
 
+  isEmpy() {
+    return this._isEmpty;
+  }
+
   clear() {
+    this._isEmpty = true;
     if (!this.drawElement) return;
     this.drawCtx.clearRect(
       0,
@@ -202,7 +210,9 @@ class Painter extends Base {
   }
 
   destroy() {
-    this._isStart = false;
+    this._isStart = null;
+    this._isMoved = null;
+    this._isEmpty = null;
     this.prePoint = null;
     this.point = null;
     this.clear();

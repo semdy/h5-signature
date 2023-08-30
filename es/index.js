@@ -504,6 +504,7 @@ var Painter = /*#__PURE__*/function (_Base) {
     _this.options = options;
     _this._isStart = false;
     _this._isMoved = false;
+    _this._isEmpty = true;
     _this._touchCount = 0;
     _this.prePoint = {};
     _this.point = {};
@@ -643,6 +644,7 @@ var Painter = /*#__PURE__*/function (_Base) {
 
       this.prePoint = painter_objectSpread({}, this.point);
       this._isMoved = true;
+      this._isEmpty = false;
       this.options.onDrawing(evt, this.point);
     }
   }, {
@@ -658,6 +660,7 @@ var Painter = /*#__PURE__*/function (_Base) {
       }
 
       this._isStart = false;
+      this._isEmpty = false;
       this._isMoved = false;
       var img = new Image();
       img.src = this.drawElement.toDataURL();
@@ -701,15 +704,23 @@ var Painter = /*#__PURE__*/function (_Base) {
       return Math.min(lineWidth, maxWidth);
     }
   }, {
+    key: "isEmpy",
+    value: function isEmpy() {
+      return this._isEmpty;
+    }
+  }, {
     key: "clear",
     value: function clear() {
+      this._isEmpty = true;
       if (!this.drawElement) return;
       this.drawCtx.clearRect(0, 0, this.drawElement.width, this.drawElement.height);
     }
   }, {
     key: "destroy",
     value: function destroy() {
-      this._isStart = false;
+      this._isStart = null;
+      this._isMoved = null;
+      this._isEmpty = null;
       this.prePoint = null;
       this.point = null;
       this.clear();
@@ -861,6 +872,7 @@ var Stage = /*#__PURE__*/function () {
     this.drawStack = [];
     this.lastCanUndo = false;
     this.lastCanRedo = false;
+    this._isEmpty = true;
     this.painter = new painter(stage_objectSpread(stage_objectSpread({}, this.options), {}, {
       onDrawUp: this.onDrawUp.bind(this)
     }));
@@ -983,6 +995,11 @@ var Stage = /*#__PURE__*/function () {
     key: "canRedo",
     value: function canRedo() {
       return this.undoRedoManager.canRedo();
+    }
+  }, {
+    key: "isEmpty",
+    value: function isEmpty() {
+      return this.painter.isEmpy();
     }
   }, {
     key: "destroy",
