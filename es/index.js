@@ -732,7 +732,8 @@ var Painter = /*#__PURE__*/function (_Base) {
       this.mouseEvent.detach();
 
       try {
-        this.drawElement.parentElement.removeChild(this.drawElement);
+        var parent = this.drawElement.parentElement || document.body;
+        parent.removeChild(this.drawElement);
         this.drawElement = null;
       } catch (e) {}
     }

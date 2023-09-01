@@ -1,6 +1,6 @@
 {
   "name": "h5-signature",
-  "version": "0.3.4",
+  "version": "0.3.5",
   "description": "h5 signature",
   "main": "lib/index.js",
   "module": "es/index.js",
